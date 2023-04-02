@@ -1,0 +1,68 @@
+Jarvis — Today at 8:23 PM
+@EagleTrooper let's use this instead
+to save blowing up the recruiters notifications
+on recruitment
+EagleTrooper — Today at 8:23 PM
+Yeah keep the recruitment clean. I understand Im a recruiter / NCO / admin for the community in involved in.
+Alright,
+I am working on developing a dashboard that gives historical stats with our server as well as our missions that run Performance / FPS / Memory Usage / etc. During my research i came across your groups Repo and it appears that you are doing something very similar to what I wanted to do. I did read through just to get an idea unfortunately there was some gaps in the implementation and i was hoping to speak to someone about how it was done with your group as well as if they would be so kind as to provide pointers and insight so that I may implement something very similar.
+Jarvis — Today at 8:26 PM
+Do you know how to setup a Grafana/InfluxDB stack?
+EagleTrooper — Today at 8:27 PM
+Already have it setup (Background in IT and Cloud Network Engineering).
+Sweetwater.I — Today at 8:27 PM
+u can see our dashboard here if u wanna see what cavmetrics extension is outputting.
+https://metrics.7cav.us/d/NED-gV3Mz/arma3?orgId=1&refresh=10s
+Jarvis — Today at 8:28 PM
+It's basically just arma -> influx -> grafana
+Sweetwater.I — Today at 8:28 PM
+but yeah, influxdb+grafana is what we do
+Jarvis — Today at 8:28 PM
+The cavmetrics addon you see is the arma extension
+EagleTrooper — Today at 8:28 PM
+Yep understood the workflow and that was very clear. I believe the piece im missing or dont understand is the dll creation / implementation
+Jarvis — Today at 8:28 PM
+If you know influx/grafana, you're 2/3rds of the way there
+
+Just git clone the cavmetrics repo
+EagleTrooper — Today at 8:29 PM
+I believe it was the Arma-Influx?
+That was the  piece that i was not clear on. Unless i was misunderstanding it still required a compiled DLL
+Jarvis — Today at 8:29 PM
+the a3_influx dll is inside of the git repo
+so == a DLL but linux
+we run our servers on linux
+EagleTrooper — Today at 8:30 PM
+Unfortuantly it looks like its a .so
+Sweetwater.I — Today at 8:30 PM
+use the arma-influx repo to build the extension
+EagleTrooper — Today at 8:30 PM
+Yeah we have windows :/
+Sweetwater.I — Today at 8:30 PM
+cavmetrics is what we called the packaged extension.
+on the repo
+Jarvis — Today at 8:30 PM
+https://github.com/7Cav/Arma-Influx
+GitHub
+GitHub - 7Cav/Arma-Influx: Arma Extension for sending metrics to In...
+Arma Extension for sending metrics to InfluxDB. Contribute to 7Cav/Arma-Influx development by creating an account on GitHub.
+
+Just compile that for dll
+it's an arma ext written in go
+Liber.N — Today at 8:31 PM
+Cavmetrics is an arma addon thats calls to arma influx extension
+Jarvis — Today at 8:31 PM
+you'll need to change the makefile on that repo tho
+EagleTrooper — Today at 8:32 PM
+does it need to be labeld armago? or a3influx?
+If that is what your referring to then it appears i do have an understanding of it and something else is missing outside of my imediate understanding and may not have anything you can provide input on. I will review the implementation again and see if I can get any further.
+I do appreciate the input and help.
+Jarvis — Today at 8:35 PM
+no probs, it's a long road but found it worth it in the end
+
+https://metrics.7cav.us/ 
+Specifically - https://metrics.7cav.us/d/NED-gV3Mz/arma3?orgId=1&refresh=10s
+EagleTrooper — Today at 8:36 PM
+I will take a look! Keep on Keeping on and again I appreciate the friendly response!
+Jarvis — Today at 8:36 PM
+You'll need to update these for your influx db host - https://github.com/7Cav/cav_metrics/blob/dev/%40CavMetrics/addons/CavMetrics/functions/fn_send.sqf#L9-L12
