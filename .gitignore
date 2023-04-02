@@ -1,2 +1,9 @@
 *.pbo
 *.bak
+*.dll
+
+*.so
+
+extension/RangerMetrics.h
+
+extension/RangerMetrics_x64.h

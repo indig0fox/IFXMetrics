@@ -3,7 +3,21 @@ params ["_metric", "_value", ["_global", false]];
 private _profileName = profileName;
 private _prefix = "Arma3";
 
-private _metricPath = [format["%1,%2", _profileName, profileName], format["%1,%2", _profileName, "global"]] select _global;
+
+private _environmentMeta = [missionName, worldName, serverName];
+
+private _metricPath = [
+    format["%1,%2,%3,%4,%5",
+        _profileName,
+        profileName,
+        missionName, worldName, serverName
+    ],
+    format["%1,%2,%3,%4,%5",
+        _profileName,
+        "global",
+        missionName, worldName, serverName
+    ]
+] select _global;
 
 // InfluDB settings
 private _connection = "http://INFLUX_URL:8086";
@@ -18,7 +32,7 @@ if(missionNamespace getVariable ["RangerMetrics_debug",false]) then {
 };
 
 // send the data
-private _return = "a3influx" callExtension _extSend;
+private _return = "RangerMetrics" callExtension _extSend;
 
 // shouldn't be possible, the extension should always return even if error
 if(isNil "_return") exitWith {
