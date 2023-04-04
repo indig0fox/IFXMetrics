@@ -46,7 +46,7 @@ if(missionNamespace getVariable ["RangerMetrics_run",false]) then {
     private _headlessClients = entities "HeadlessClient_F";
     {
         {
-            private _stats_fps = round diag_fps;
+            private _stats_fps = diag_fps;
             ["stats.HCfps", "float", _stats_fps] remoteExec ["RangerMetrics_fnc_send", 2];
             
         } remoteExecCall ["bis_fnc_call", owner _x];
