@@ -1,15 +1,35 @@
+import sys
 import threading
 
 
 # https://stackoverflow.com/a/65447493/6543759
 class ThreadWithResult(threading.Thread):
-    def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, *, daemon=None):
+    def __init__(
+        self, group=None, target=None, name=None, args=(), kwargs=None, *, daemon=None
+    ):
+        self.exc = None
         if not kwargs:
             kwargs = {}
 
         def function():
-            self.result = target(*args, **kwargs)
+            self.exc = None
+            try:
+                self.result = target(*args, **kwargs)
+            except:  # noqa
+                # Save details of the exception thrown but don't rethrow,
+                # just complete the function
+                self.exc = sys.exc_info()
+
         super().__init__(group=group, target=function, name=name, daemon=daemon)
+
+    # https://stackoverflow.com/a/12223550/6543759
+    def join(self, *args, **kwargs):
+        super().join(*args, **kwargs)
+
+        if self.exc:
+            msg = "Thread '%s' threw an exception: %s" % (self.getName(), self.exc[1])
+            new_exc = Exception(msg)
+            raise new_exc.with_traceback(self.exc[2])
 
 
 THREADS = {}
@@ -44,9 +64,17 @@ def get_call_value(thread_id):
     thread = THREADS[thread_id]
     if thread.is_alive():
         # Thread is still working
-        raise ValueError('Thread is still running!')
+        raise ValueError("Thread is still running!")
 
     # Thread has finished, we can return its value now
-    thread.join()
-    del THREADS[thread_id]
-    return thread.result
+    try:
+        thread.join()
+    finally:
+        del THREADS[thread_id]
+
+    try:
+        return thread.result
+    except AttributeError:
+        raise RuntimeError(
+            'The thread does not have the "result" attribute. An unhandled error occurred inside your Thread'
+        )
