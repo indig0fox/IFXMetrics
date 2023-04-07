@@ -4,7 +4,7 @@ class CfgPatches {
 		weapons[] = {};
 		requiredVersion = 0.1;
 		requiredAddons[] = {};
-		author[] = {"EagleTrooper and Gary"};
+		author[] = {"EagleTrooper","Gary","IndigoFox"};
 		authorUrl = "http://example.com";
 	};
 };
@@ -14,9 +14,11 @@ class CfgFunctions {
 		class Common {
 			file = "\RangerMetrics\functions";
 			class postInit { postInit = 1;};
-			class log {};
+			class gather {};
+			class queue {};
 			class send {};
-			class run {};
+			class checkResults {};
+			class log {};
 		};
 	};
 };

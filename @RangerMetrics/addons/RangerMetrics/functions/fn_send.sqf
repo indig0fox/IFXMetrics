@@ -1,55 +1,54 @@
-params ["_metric", "_valueType", "_value", ["_global", false]];
-
-private _profileName = profileName;
-private _prefix = "Arma3";
-private _locality = [profileName, "global"] select _global;
-
-// InfluxDB settings
-// private _connection = "http://indifox.info:8086";
-// private _token = "BwOzapPBLZ-lhtrcs3PC2Jk2p7plCC0UckHKxe8AxulYkk9St1q2aloXMW2rDD4X2ufIkx3fwSbEe6ZeJo8ljg==";
-// private _org = "ranger-metrics";
-// private _bucket = "ranger-metrics";
-
-// private _extSend = format["%1,%2", format["%1,%2,%3,%4,%5,%6", _connection, _token, _org, _bucket, _metricPath, _metric], _value];
-private _extSend = [
-    // _connection,
-    // _token,
-    // _org,
-    // _bucket,
-    _profileName,
-    _locality,
-    missionName,
-    worldName,
-    serverName,
-    _metric,
-    _valueType,
-    _value
-];
-
-if(missionNamespace getVariable ["RangerMetrics_debug",false]) then {
-    [format ["Sending a3influx data: %1", _extSend], "DEBUG"] call RangerMetrics_fnc_log;
-};
-
 // send the data
-private _return = "RangerMetrics" callExtension ["sendToInflux", _extSend];
+[{
+	if(missionNamespace getVariable ["RangerMetrics_debug",false]) then {
+		[format ["Sending a3influx data: %1", RangerMetrics_messageQueue], "DEBUG"] call RangerMetrics_fnc_log;
+	};
 
-// shouldn't be possible, the extension should always return even if error
-if(isNil "_return") exitWith {
-    [format ["return was nil (%1)", _extSend], "ERROR"] call RangerMetrics_fnc_log;
-    false
-};
+	// duplicate the message queue so we can clear it before sending the data
+	private _extSend = + RangerMetrics_messageQueue;
+	RangerMetrics_messageQueue = createHashMap;
 
-// extension error codes
-// if(_return in ["invalid metric value","malformed, could not find separator"] ) exitWith {
-//     [format ["%1 (%2)", _return, _extSend], "ERROR"] call RangerMetrics_fnc_log;
-//     false
-// };
+	{
+		// for each bucket, send data to extension
+		private _bucketName = _x;
+		private _bucketData = _y;
+		// if (true) exitWith {
+			// [format ["bucketName: %1", _bucketName], "DEBUG"] call RangerMetrics_fnc_log;
+			// [format ["bucketData: %1", _bucketData], "DEBUG"] call RangerMetrics_fnc_log;
+		// };
 
-// success, only show if debug is set
-if(missionNamespace getVariable ["RangerMetrics_debug",false]) then {
-    // _returnArgs = _return splitString (toString [10,32]);
-    _returnArgs = parseSimpleArray _return;
-    [format ["a3influx return data: %1",_returnArgs], "DEBUG"] call RangerMetrics_fnc_log;
-};
+		{
+			_thisItem = _x;
+			private _return = "RangerMetrics" callExtension ["sendToInflux", flatten [_bucketName, _thisItem]];
 
-true
+			// shouldn't be possible, the extension should always return even if error
+			if(isNil "_return") exitWith {
+				[format ["return was nil (%1)", _extSend], "ERROR"] call RangerMetrics_fnc_log;
+				false
+			};
+
+			if (typeName _return != "ARRAY") exitWith {
+				[format ["return was not an array (%1)", _extSend], "ERROR"] call RangerMetrics_fnc_log;
+				false
+			};
+
+			if (count _return == 0) exitWith {
+				[format ["return was empty (%1)", _extSend], "ERROR"] call RangerMetrics_fnc_log;
+				false
+			};
+
+			if (count _return == 2) exitWith {
+				[format ["return was error (%1)", _extSend], "ERROR"] call RangerMetrics_fnc_log;
+				false
+			};
+
+			// success, add to list of active threads
+			// RangerMetrics_activeThreads pushBack (_return select 0);
+
+			// success, only show if debug is set
+			if (missionNamespace getVariable ["RangerMetrics_debug",false]) then {
+				[format ["a3influx threadId: %1", _return], "DEBUG"] call RangerMetrics_fnc_log;
+			};
+		} forEach _bucketData;
+	} forEach _extSend;
+}] call CBA_fnc_execNextFrame;

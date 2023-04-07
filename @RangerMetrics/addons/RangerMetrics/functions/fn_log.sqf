@@ -1,5 +1,9 @@
 params [["_text","Log text invalid",[""]], ["_type","INFO",[""]]];
-private _textFormatted = format ["[RangerMetrics] %1: %2", _type, _text];
+private _textFormatted = format [
+    "[%1] %2: %3",
+    RangerMetrics_logPrefix,
+    _type,
+    _text];
 
 if(isServer) then {
     diag_log text _textFormatted;
