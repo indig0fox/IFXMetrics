@@ -1,0 +1,1 @@
+(parseSimpleArray ("RangerMetrics" callExtension "getUnixTimeNano")) select 0;

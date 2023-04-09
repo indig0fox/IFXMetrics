@@ -10,24 +10,24 @@ RangerMetrics_messageQueue = createHashMap;
 [format ["CBA detected: %1", _cba]] call RangerMetrics_fnc_log;
 ["Initializing v1.1"] call RangerMetrics_fnc_log;
 
-private _settingsLoaded = ["RangerMetrics.influx.load_settings", []] call py3_fnc_callExtension;
-if (isNil "_settingsLoaded") exitWith {
-    ["Extension not found, disabling"] call RangerMetrics_fnc_log;
-    RangerMetrics_run = false;
-};
-if (_settingsLoaded isEqualTo []) then {
-    if (count _settingsLoaded == 0) exitWith {
-        ["Settings not loaded, disabling"] call RangerMetrics_fnc_log;
-        RangerMetrics_run = false;
-    };
-    if (_settingsLoaded#0 isEqualTo 1) exitWith {
-        [
-            format["Settings not loaded, disabling. %1", _settingsLoaded#1],
-            "ERROR"
-        ] call RangerMetrics_fnc_log;
-        RangerMetrics_run = false;
-    };
-};
+private _settingsLoaded = "RangerMetrics" callExtension "loadSettings";
+// if (isNil "_settingsLoaded") exitWith {
+//     ["Extension not found, disabling"] call RangerMetrics_fnc_log;
+//     RangerMetrics_run = false;
+// };
+// if (_settingsLoaded isEqualTo []) then {
+//     if (count _settingsLoaded == 0) exitWith {
+//         ["Settings not loaded, disabling"] call RangerMetrics_fnc_log;
+//         RangerMetrics_run = false;
+//     };
+//     if (_settingsLoaded#0 isEqualTo 1) exitWith {
+//         [
+//             format["Settings not loaded, disabling. %1", _settingsLoaded#1],
+//             "ERROR"
+//         ] call RangerMetrics_fnc_log;
+//         RangerMetrics_run = false;
+//     };
+// };
 format["Settings loaded: %1", _settingsLoaded#2] call RangerMetrics_fnc_log;
 RangerMetrics_settings = _settingsLoaded#2;
 // RangerMetrics_settings = createHashMap;
@@ -40,7 +40,7 @@ RangerMetrics_settings = _settingsLoaded#2;
 //     "arma3",
 //     createHashMapFromArray (_top get "refreshRateMs")
 // ];
-["RangerMetrics.influx.connect_to_influx", []] call py3_fnc_callExtension;
+"RangerMetrics" callExtension "connectToInflux";
 
 RangerMetrics_run = true;
 

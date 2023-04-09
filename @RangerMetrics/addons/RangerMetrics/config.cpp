@@ -11,14 +11,39 @@ class CfgPatches {
 
 class CfgFunctions {
 	class RangerMetrics {
-		class Common {
-			file = "\RangerMetrics\functions";
+		class core {
+			file = "\RangerMetrics\functions\core";
 			class postInit { postInit = 1;};
-			class gather {};
+			class captureLoop {};
+			class log {};
 			class queue {};
 			class send {};
-			class checkResults {};
-			class log {};
+		};
+		class eventHandlers {
+			file = "\RangerMetrics\functions\eventHandlers";
+			class addHandlers {};
+			class callbackHandler {};
+		};
+		class helpers {
+			file = "\RangerMetrics\functions\helpers";
+			class toLineProtocol {};
+			class encodeJSON {};
+			class stringReplace {};
+			class unixTimestamp {};
+		};
+		class measurements {
+			file = "\RangerMetrics\functions\measurements";
+			class chat_message {};
+			class entities_global {};
+			class entities_local {};
+			class mission_config_file {};
+			class player_identity {};
+			class player_performance {};
+			class player_status {};
+			class running_mission {};
+			class running_scripts {};
+			class server_performance {};
+			class server_time {};
 		};
 	};
 };

@@ -12,7 +12,7 @@ private _prefix = "Arma3";
 
 private _extSend = [
     _measurement, // metric name
-    _valueType, // float or int or bool
+    _valueType // float or int or bool
 ];
 
 private _outTags = [ // tags

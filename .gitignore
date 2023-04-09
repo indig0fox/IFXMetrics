@@ -9,3 +9,5 @@ extension/RangerMetrics.h
 extension/RangerMetrics_x64.h
 
 \@RangerMetrics/settings.json
+
+*.log

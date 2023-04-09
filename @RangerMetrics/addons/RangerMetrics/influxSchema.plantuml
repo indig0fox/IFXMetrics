@@ -1,0 +1,243 @@
+@startuml classDiagram
+   class server_state {
+      BUCKET
+   }
+   server_state --> running_mission
+   class running_mission {
+      tag string profileName
+      tag string connectedServer
+      field string onLoadName
+      field string missionName
+      field string missionNameSource
+      field string briefingName
+   }
+
+   server_state --> time
+   class time {
+      tag string profileName
+      tag string connectedServer
+      field float diag_tickTime
+      field int serverTime
+      field float timeMultiplier
+      field int accTime
+   }
+
+   server_state --> running_scripts
+   class running_scripts {
+      tag string profileName
+      tag string connectedServer
+      field int spawn_total
+      field int execVM_total
+      field int exec_total
+      field int execFSM_total
+      field int pfh_total
+   }
+
+   server_state --> entities_local
+   class entities_local {
+      tag string profileName
+      tag string connectedServer
+      field int units_alive
+      field int units_dead
+      field int vehicles_total
+      field int groups_total
+   }
+   server_state --> entities_global
+   class entities_global {
+      tag string profileName
+      tag string connectedServer
+      field int units_alive
+      field int units_dead
+      field int vehicles_total
+      field int groups_total
+   }
+
+   server_state --> server_performance
+   class server_performance {
+      tag string profileName
+      tag string connectedServer
+      field string fps_avg
+      field string fps_min
+
+   }
+
+   server_state --> weather
+   class weather {
+      tag string profileName
+      tag string connectedServer
+      field string fog
+      field string overcast
+      field string rain
+      field string humidity
+      field string waves
+      field string windDir
+      field string windStr
+      field string gusts
+      field string lightnings
+      field string moonIntensity
+      field string moonPhase
+      field string sunOrMoon
+   }
+
+   class config_state {
+      tag string profileName
+      tag string connectedServer
+      Measurement mission_config_file
+      Measurement addon_options
+      Measurement mission_parameters
+      Measurement visual_settings
+   }
+
+   config_state --> mission_config_file
+   class mission_config_file {
+      tag string profileName
+      tag string connectedServer
+      tag string category [
+         mission_info
+         respawn
+         player_ui
+         corpse_and_wreck
+         mission_settings
+      ]
+      
+   }
+  '  link fields in each category
+    mission_config_file --> mission_info
+    class mission_info {
+      field string author
+      field string onLoadName
+      field string onLoadMission
+      field string loadScreen
+      ' field string header
+      field string gameType
+      field int minPlayers
+      field int maxPlayers
+      field int onLoadIntro
+      field int onLoadMissionTime
+      field int onLoadIntroTime
+      field string briefingName
+      field string overviewPicture
+      field string overviewText
+      field string overviewTextLocked
+    }
+
+    mission_config_file --> respawn
+    class respawn {
+      field string respawn
+      field string respawnButton
+      field string respawnDelay
+      field string respawnVehicleDelay
+      field string respawnDialog
+      field string respawnOnStart
+      field string respawnTemplates
+      field string respawnTemplatesWest
+      field string respawnTemplatesEast
+      field string respawnTemplatesGuer
+      field string respawnTemplatesCiv
+      field string respawnWeapons
+      field string respawnMagazines
+      field int reviveMode
+      field int reviveUnconsciousStateMode
+      field int reviveRequiredTrait
+      field int reviveRequiredItems
+      field int reviveRequiredItemsFakConsumed
+      field int reviveMedicSpeedMultiplier
+      field int reviveDelay
+      field int reviveForceRespawnDelay
+      field int reviveBleedOutDelay
+      field int enablePlayerAddRespawn
+    }
+
+    mission_config_file --> player_ui
+    class player_ui {
+      field int overrideFeedback
+      field int showHUD
+      field int showCompass
+      field int showGPS
+      field int showGroupIndicator
+      field int showMap
+      field int showNotePad
+      field int showPad
+      field int showWatch
+      field int showUAVFeed
+      field int showSquadRadar
+    }
+
+    mission_config_file --> corpse_and_wreck
+    class corpse_and_wreck {
+      field int corpseManagerMode
+      field int corpseLimit
+      field int corpseRemovalMinTime
+      field int corpseRemovalMaxTime
+      field int wreckManagerMode
+      field int wreckLimit
+      field int wreckRemovalMinTime
+      field int wreckRemovalMaxTime
+      field int minPlayerDistance
+    }
+
+    mission_config_file --> mission_settings
+    class mission_settings {
+      field int aiKills
+      field int briefing
+      field int debriefing
+      field string disableChannels
+      field int disabledAI
+      field string disableRandomization
+      field List~string~ enableDebugConsole
+      field int enableItemsDropping
+      field int enableTeamSwitch
+      field int forceRotorLibSimulation
+      field int joinUnassigned
+      field int minScore
+      field int avgScore
+      field int maxScore
+      field string onCheat
+      field string onPauseScript
+      field int saving
+      field int scriptedPlayer
+      field int skipLobby
+      field int HostDoesNotSkipLobby
+      field string missionGroup
+    }
+
+
+   config_state --> visual_settings
+   class visual_settings {
+      field string getTIParameters
+      field string objectViewDistance
+   }
+
+   class player_state {
+      Measurement identity
+      Measurement status
+   }
+
+    player_state --> player_identity
+    class player_identity {
+      field string playerID
+      field string ownerId
+      field string playerUID
+      field string profileName
+      field string displayName
+      field string steamName
+      bool string isHC
+    }
+
+    player_state --> player_status
+    class player_status {
+      field int clientStateNumber
+      field int adminState
+    }
+
+    player_state --> player_performance
+    class player_performance {
+      field float avgPing
+      field float avgBandwidth
+      field float desync
+    }
+
+
+
+
+@enduml
