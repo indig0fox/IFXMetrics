@@ -2,12 +2,13 @@
 
 if (is3DEN || !isMultiplayer) exitWith {};
 
-RangerMetrics_cbaPresent = (isClass(configFile >> "CfgPatches" >> "cba_main"));
+RangerMetrics_cbaPresent = isClass(configFile >> "CfgPatches" >> "cba_main");
+RangerMetrics_aceMedicalPresent = isClass(configFile >> "CfgPatches" >> "ace_medical_status");
 RangerMetrics_logPrefix = "RangerMetrics";
 RangerMetrics_debug = true;
 RangerMetrics_initialized = false;
 RangerMetrics_run = false;
-RangerMetrics_activeThreads = [];
+RangerMetrics_nextID = 0;
 RangerMetrics_messageQueue = createHashMap;
 RangerMetrics_sendBatchHandle = scriptNull;
 
@@ -84,6 +85,10 @@ RangerMetrics_captureDefinitions = createHashMapFromArray [
     [
         "ClientPoll",
         call RangerMetrics_cDefinitions_fnc_client_poll
+    ],
+    [
+        "CBAEvent",
+        call RangerMetrics_cDefinitions_fnc_server_CBA
     ]
 ];
 
@@ -113,21 +118,32 @@ RangerMetrics_captureDefinitions = createHashMapFromArray [
 // begin client polling
 
 
+// set up CBA event listeners
+{_x params ["_handleName", "_code"];
+    missionNamespace setVariable [
+        ("RangerMetrics" + "_CBAEH_" + _handleName),
+        ([_handleName, _code] call CBA_fnc_addEventHandlerArgs)
+    ];
+} forEach (RangerMetrics_captureDefinitions get "CBAEvent");
 
-// start sending
-[{
-    params ["_args", "_idPFH"];
-    if (scriptDone RangerMetrics_sendBatchHandle) then {
-        RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
-    };
-}, 2, []] call CBA_fnc_addPerFrameHandler;
+
+// set up CBA class inits if CBA loaded
+call RangerMetrics_fnc_classHandlers;
+
 
 
 RangerMetrics_initialized = true;
 RangerMetrics_run = true;
-
-call RangerMetrics_capture_fnc_running_mission;
-
+["RangerMetrics_run", true] remoteExecCall ["setVariable", 0, true];
 
 
 
+
+// start sending
+[{
+    params ["_args", "_idPFH"];
+    // if (scriptDone RangerMetrics_sendBatchHandle) then {
+    //     RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
+    // };
+    call RangerMetrics_fnc_send;
+}, 3, []] call CBA_fnc_addPerFrameHandler;

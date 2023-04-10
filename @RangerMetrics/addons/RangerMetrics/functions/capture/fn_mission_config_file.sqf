@@ -1,3 +1,5 @@
+if (!RangerMetrics_run) exitWith {};
+
 // get basic config properties
 private _properties = [
 	["mission_info", [

@@ -1,3 +1,5 @@
+if (!RangerMetrics_run) exitWith {};
+
 // Mission name
 [
     "server_state", // bucket to store the data
@@ -12,5 +14,6 @@
         ["string","briefingName", briefingName],
         ["string","missionName", missionName],
         ["string","missionNameSource", missionNameSource]
-    ]
+    ],
+    ["profile", "server", "world"] // context
 ] call RangerMetrics_fnc_queue;

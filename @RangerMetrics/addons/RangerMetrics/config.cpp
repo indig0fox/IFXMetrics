@@ -10,6 +10,18 @@ class CfgPatches {
 };
 
 class CfgFunctions {
+	class RangerMetrics_event {
+		class functions {
+			file = "\RangerMetrics\functions\capture\EHOnly";
+			class ace_unconscious {};
+			class EntityKilled {};
+			class FiredMan {};
+			class HandleChatMessage {};
+			class MarkerCreated {};
+			class MarkerDeleted {};
+			class MarkerUpdated {};
+		};
+	}
 	class RangerMetrics_cDefinitions {
 		class functions {
 			file = "\RangerMetrics\functions\captureDefinitions";
@@ -17,31 +29,32 @@ class CfgFunctions {
 			class server_missionEH {};
 			class client_poll {};
 			// class clientEvent {};
+			class server_CBA {};
 		};
 	};
 	class RangerMetrics_capture {
 		// these names represent measurement names send to InfluxDB - snake case
 		class functions {
 			file = "\RangerMetrics\functions\capture";
-			class chat_message {};
-			class entities_global {};
-			class entities_local {};
+			class entity_count {};
 			class mission_config_file {};
 			class player_identity {};
-			class player_loadout {};
 			class player_performance {};
 			class player_status {};
 			class running_mission {};
 			class running_scripts {};
 			class server_performance {};
 			class server_time {};
+			class unit_inventory {};
+			class unit_state {};
+			class view_distance {};
 			class weather {};
 		};
 	};
 	class RangerMetrics {
 		class core {
 			file = "\RangerMetrics\functions\core";
-			class postInit { postInit = 1;};
+			class postInit { postInit = 1; };
 			class captureLoop {};
 			class log {};
 			class queue {};
@@ -49,11 +62,8 @@ class CfgFunctions {
 			class callbackHandler {};
 			class sendClientPoll {};
 			class startServerPoll {};
-		};
-
-		class eventHandlers {
-			file = "\RangerMetrics\functions\eventHandlers";
-			class addHandlers {};
+			class classHandlers {};
+			class initUnit {};
 		};
 		class helpers {
 			file = "\RangerMetrics\functions\helpers";

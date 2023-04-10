@@ -1,3 +1,5 @@
+if (!RangerMetrics_run) exitWith {};
+
 [
 	"server_state", // bucket to store the data
 	"weather", // measurement classifier inside of bucket

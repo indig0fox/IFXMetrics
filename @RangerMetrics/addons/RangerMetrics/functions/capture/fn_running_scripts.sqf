@@ -1,3 +1,5 @@
+if (!RangerMetrics_run) exitWith {};
+
 ["server_state", "running_scripts", nil, [
 	["int", "spawn", diag_activeScripts select 0],
 	["int", "execVM", diag_activeScripts select 1],

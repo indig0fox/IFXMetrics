@@ -23,8 +23,8 @@ if (
 		// extension calls support a max of 2048 elements in the extension call
 		// so we need to split the data into chunks of 2000
 		private "_processing";
-		_processing = _records select [0, (count _records -1) min 2000];
-		_records = _records select [2000, count _records - 1];
+		_processing = _records select [0, (count _records -1) min 750];
+		_records = _records select [750, count _records - 1];
 
 		// send the data
 		if (

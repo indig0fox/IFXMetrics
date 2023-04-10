@@ -1,3 +1,5 @@
+if (!RangerMetrics_run) exitWith {};
+
 {
 	_x params ["_playerID", "_ownerId", "_playerUID", "_profileName", "_displayName", "_steamName", "_clientState", "_isHC", "_adminState", "_networkInfo", "_unit"];
 	_networkInfo params ["_avgPing", "_avgBandwidth", "_desync"];
