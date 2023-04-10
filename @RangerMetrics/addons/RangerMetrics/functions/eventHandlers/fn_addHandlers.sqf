@@ -1,11 +1,5 @@
 addMissionEventHandler ["MPEnded", {
-	private ["_winner", "_reason"];
-	_winner = "Unknown";
-	_reason = "Mission Complete";
-	["server_events", "MPEnded", nil, [
-		["string", "winner", _winner],
-		["string", "reason", _reason]
-	]] call RangerMetrics_fnc_queue;
+
 }];
 
 addMissionEventHandler ["OnUserConnected", {
@@ -37,7 +31,7 @@ addMissionEventHandler ["PlayerConnected", {
 		["int", "id", _id],
 		["string", "uid", _uid],
 		["string", "name", _name],
-		["bool", "jip", _jip],
+		["bool", "isJip", _jip],
 		["int", "owner", _owner],
 		["string", "idstr", _idstr]
 	]] call RangerMetrics_fnc_queue;
@@ -50,7 +44,7 @@ addMissionEventHandler ["PlayerDisconnected", {
 		["int", "id", _id],
 		["string", "uid", _uid],
 		["string", "name", _name],
-		["bool", "jip", _jip],
+		["bool", "isJip", _jip],
 		["int", "owner", _owner],
 		["string", "idstr", _idstr]
 	]] call RangerMetrics_fnc_queue;

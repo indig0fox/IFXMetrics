@@ -1,7 +1,19 @@
-@startuml classDiagram
+classDiagram
    class server_state {
       BUCKET
    }
+
+   class server_events {
+    Measurement MPEnded
+    Measurement OnUserConnected
+    Measurement OnUserDisconnected
+    Measurement PlayerConnected
+    Measurement PlayerDisconnected
+    Measurement OnUserClientStateChanged
+    Measurement OnUserAdminStateChanged
+    Meausrement HandleChatMessage
+   }
+
    server_state --> running_mission
    class running_mission {
       tag string profileName
@@ -12,8 +24,8 @@
       field string briefingName
    }
 
-   server_state --> time
-   class time {
+   server_state --> server_time
+   class server_time {
       tag string profileName
       tag string connectedServer
       field float diag_tickTime
@@ -101,14 +113,16 @@
       ]
       
    }
-  '  link fields in each category
+%%   '  link fields in each category
     mission_config_file --> mission_info
     class mission_info {
+    tag string profileName
+      tag string connectedServer
       field string author
       field string onLoadName
       field string onLoadMission
       field string loadScreen
-      ' field string header
+    %%   ' field string header
       field string gameType
       field int minPlayers
       field int maxPlayers
@@ -123,6 +137,8 @@
 
     mission_config_file --> respawn
     class respawn {
+            tag string profileName
+      tag string connectedServer
       field string respawn
       field string respawnButton
       field string respawnDelay
@@ -150,6 +166,8 @@
 
     mission_config_file --> player_ui
     class player_ui {
+            tag string profileName
+      tag string connectedServer
       field int overrideFeedback
       field int showHUD
       field int showCompass
@@ -165,6 +183,8 @@
 
     mission_config_file --> corpse_and_wreck
     class corpse_and_wreck {
+            tag string profileName
+      tag string connectedServer
       field int corpseManagerMode
       field int corpseLimit
       field int corpseRemovalMinTime
@@ -178,6 +198,8 @@
 
     mission_config_file --> mission_settings
     class mission_settings {
+            tag string profileName
+      tag string connectedServer
       field int aiKills
       field int briefing
       field int debriefing
@@ -204,40 +226,47 @@
 
    config_state --> visual_settings
    class visual_settings {
+        tag string profileName
+      tag string connectedServer
       field string getTIParameters
       field string objectViewDistance
    }
 
    class player_state {
-      Measurement identity
-      Measurement status
+
    }
+
+
+
+
 
     player_state --> player_identity
     class player_identity {
+            tag string profileName
+      tag string connectedServer
       field string playerID
       field string ownerId
       field string playerUID
       field string profileName
       field string displayName
       field string steamName
-      bool string isHC
+      field bool isHC
     }
 
     player_state --> player_status
     class player_status {
+            tag string profileName
+      tag string connectedServer
       field int clientStateNumber
       field int adminState
     }
 
     player_state --> player_performance
     class player_performance {
+            tag string profileName
+      tag string connectedServer
       field float avgPing
       field float avgBandwidth
       field float desync
     }
 
-
-
-
-@enduml

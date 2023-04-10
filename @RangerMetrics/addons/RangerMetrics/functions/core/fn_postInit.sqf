@@ -10,7 +10,6 @@ RangerMetrics_run = false;
 RangerMetrics_activeThreads = [];
 RangerMetrics_messageQueue = createHashMap;
 RangerMetrics_sendBatchHandle = scriptNull;
-RangerMetrics_captureBatchHandle = scriptNull;
 
 [format ["Instance name: %1", profileName]] call RangerMetrics_fnc_log;
 [format ["CBA detected: %1", RangerMetrics_cbaPresent]] call RangerMetrics_fnc_log;
@@ -64,58 +63,71 @@ addMissionEventHandler ["ExtensionCallback", {
     _this call RangerMetrics_fnc_callbackHandler;
 }];
 
+
+// define the metrics to capture by sideloading definition files
+// this keeps the main file clean and easy to read
+// the definition files are in the format of a hashmap, where the key is the category and the value is an array of arrays, where each sub-array is a capture definition
+RangerMetrics_captureDefinitions = createHashMapFromArray [
+    [
+        "ServerEvent",
+        createHashMapFromArray [
+            [
+                "MissionEventHandlers",
+                call RangerMetrics_cDefinitions_fnc_server_missionEH
+            ]
+    ]],
+    ["ClientEvent", []],
+    [
+        "ServerPoll",
+        call RangerMetrics_cDefinitions_fnc_server_poll
+    ],
+    [
+        "ClientPoll",
+        call RangerMetrics_cDefinitions_fnc_client_poll
+    ]
+];
+
+
+// add missionEventHandlers on server
+{_x params ["_handleName", "_code"];
+    missionNamespace setVariable [
+        ("RangerMetrics" + "_MEH_" + _handleName),
+        (addMissionEventHandler [_handleName, _code])
+    ];
+} forEach ((RangerMetrics_captureDefinitions get "ServerEvent") get "MissionEventHandlers");
+
+// begin server polling
+{
+    _x call RangerMetrics_fnc_startServerPoll;
+} forEach (RangerMetrics_captureDefinitions get "ServerPoll");
+
+// remoteExec client polling - send data to start handles
+{
+    _x call RangerMetrics_fnc_sendClientPoll;
+} forEach (RangerMetrics_captureDefinitions get "ClientPoll");
+
+// {
+
+// } forEach (call RangerMetrics_captureDefinitions_fnc_clientEvent);
+
+// begin client polling
+
+
+
+// start sending
+[{
+    params ["_args", "_idPFH"];
+    if (scriptDone RangerMetrics_sendBatchHandle) then {
+        RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
+    };
+}, 2, []] call CBA_fnc_addPerFrameHandler;
+
+
 RangerMetrics_initialized = true;
 RangerMetrics_run = true;
 
-
-call RangerMetrics_fnc_addHandlers;
-
-
-if (RangerMetrics_cbaPresent) then { // CBA is running, use PFH
-
-    /*
-
-    This capture method is dynamic.
-    Every 5 seconds, two script handles are checked. One is for capturing, one is for sending.
-    The capturing script will go through and capture data, getting nanosecond precision timestamps from the extension to go alongside each data point, then saving it to a queue. It will go through all assigned interval-based checks then exit, and on the next interval of this parent PFH, the capturing script will be spawned again.
-    The queue is a hashmap where keys are buckets and values are arrays of data points in [string] line protocol format.
-    The sending script will go through and send data, sending it in batches per bucket and per 2000 data points, as the max extension call with args is 2048 elements.
-    The sending script will also check if the queue is empty, and if it is, it will exit. This means scriptDone will be true, and on the next interval of this parent PFH, the sending script will be spawned again.
+call RangerMetrics_capture_fnc_running_mission;
 
 
-    This system means that capture and sending are occurring in the scheduled environment, not blocking the server, while maintaining the timestamps of when each point was captured. The cycles of each will only occur at most once per 5 seconds, leaving plenty of time, and there will never be more than one call for each at a time.
-    */
-    [{
-        params ["_args", "_idPFH"];
-        if (scriptDone RangerMetrics_captureBatchHandle) then {
-            RangerMetrics_captureBatchHandle = [] spawn RangerMetrics_fnc_captureLoop;
-        };
-        if (scriptDone RangerMetrics_sendBatchHandle) then {
-            RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
-        };
-    }, 5, []] call CBA_fnc_addPerFrameHandler;
 
 
-    // runs on interval
-    // [{
-    //     params ["_args", "_idPFH"];
-    //     RangerMetrics_unixTime = (parseSimpleArray ("RangerMetrics" callExtension "getUnixTimeNano")) select 0;
-    //     // spawn RangerMetrics_fnc_captureLoop;
-    //     // call RangerMetrics_fnc_send;
-    // }, 3, []] call CBA_fnc_addPerFrameHandler;
-} else { // CBA isn't running, use sleep
-    [] spawn {
-        while {true} do {
-            RangerMetrics_unixTime = (parseSimpleArray ("RangerMetrics" callExtension "getUnixTimeNano")) select 0;
-            call RangerMetrics_fnc_captureLoop; // nested to match CBA PFH signature
-
-            sleep 1;
-            if (RangerMetrics_sendBatchHandle != -1) exitWith {
-                RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
-            };
-            if (scriptDone RangerMetrics_sendBatchHandle) exitWith {
-                RangerMetrics_sendBatchHandle = -1;
-            };
-        };
-    };
-};

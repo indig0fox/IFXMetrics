@@ -31,6 +31,25 @@ if (
 			missionNamespace getVariable ["RangerMetrics_debug",false]
 		) then {
 			[format ["Bucket: %1, RecordsCount: %2", _bucket, count _processing], "DEBUG"] call RangerMetrics_fnc_log;
+
+			// get unique measurement IDs
+			private _measurements = [];
+			{
+				_thisMeasurement = _x splitString "," select 0;
+				_measurements pushBack _thisMeasurement;
+			} forEach _processing;
+
+			// get counts of each measurement
+			private _measurementCounts = [];
+			{
+				private _measurement = _x;
+				_measurementCounts pushBack [
+					_measurement,
+					count (_measurements select {_x == _measurement})
+				];
+			} forEach _measurements;
+
+			[format ["Measurements: %1", _measurementCounts], "DEBUG"] call RangerMetrics_fnc_log;
 		};
 
 		"RangerMetrics" callExtension ["sendToInflux", flatten [_bucket, _processing]];
