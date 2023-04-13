@@ -1,3 +1,5 @@
+if (!RangerMetrics_run) exitWith {};
+
 [
 	"server_state",
 	"view_distance",

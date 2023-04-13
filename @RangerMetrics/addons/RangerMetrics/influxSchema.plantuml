@@ -4,7 +4,6 @@ classDiagram
    }
 
    class server_events {
-    Measurement MPEnded
     Measurement OnUserConnected
     Measurement OnUserDisconnected
     Measurement PlayerConnected
@@ -12,16 +11,34 @@ classDiagram
     Measurement OnUserClientStateChanged
     Measurement OnUserAdminStateChanged
     Meausrement HandleChatMessage
+    Measurement MPEnded
+    Measurement EntityCreated
+    Measurement EntityKilled
+    Measurement GroupCreated
+    Measurement GroupDeleted
+    Measurement MarkerCreated
+    Measurement MarkerDeleted
+    Measurement MarkerUpdated
    }
 
    server_state --> running_mission
    class running_mission {
-      tag string profileName
-      tag string connectedServer
-      field string onLoadName
-      field string missionName
-      field string missionNameSource
-      field string briefingName
+        capture: ServerPoll, 60s
+        tag string profileName
+        tag string connectedServer
+        field string onLoadName
+        field string missionName
+        field string missionNameSource
+        field string briefingName
+   }
+
+   server_state --> view_distance
+   class view_distance {
+        capture: ServerPoll, 60s
+        tag string profileName
+        tag string connectedServer
+        field string viewDistance
+        field string objectViewDistance
    }
 
    server_state --> server_time
@@ -47,48 +64,62 @@ classDiagram
 
    server_state --> entities_local
    class entities_local {
-      tag string profileName
-      tag string connectedServer
-      field int units_alive
-      field int units_dead
-      field int vehicles_total
-      field int groups_total
+        capture: ServerPoll, 1s (customizable)
+        tag string profileName
+        tag string connectedServer
+        field int units_alive
+        field int units_dead
+        field int vehicles_total
+        field int groups_total
    }
    server_state --> entities_global
    class entities_global {
-      tag string profileName
-      tag string connectedServer
-      field int units_alive
-      field int units_dead
-      field int vehicles_total
-      field int groups_total
+        capture: ServerPoll, 1s (customizable)
+        tag string profileName
+        tag string connectedServer
+        field int units_alive
+        field int units_dead
+        field int vehicles_total
+        field int groups_total
+   }
+   server_state --> entities_remote
+   class entities_remote {
+        capture: ServerPoll, 1s (customizable)
+        tag string profileName
+        tag string connectedServer
+        field int units_alive
+        field int units_dead
+        field int vehicles_total
+        field int groups_total
    }
 
    server_state --> server_performance
    class server_performance {
-      tag string profileName
-      tag string connectedServer
-      field string fps_avg
-      field string fps_min
+        capture: ServerPoll, 1s (customizable)
+        tag string profileName
+        tag string connectedServer
+        field string fps_avg
+        field string fps_min
 
    }
 
    server_state --> weather
    class weather {
-      tag string profileName
-      tag string connectedServer
-      field string fog
-      field string overcast
-      field string rain
-      field string humidity
-      field string waves
-      field string windDir
-      field string windStr
-      field string gusts
-      field string lightnings
-      field string moonIntensity
-      field string moonPhase
-      field string sunOrMoon
+        capture: ServerPoll, 60s
+        tag string profileName
+        tag string connectedServer
+        field string fog
+        field string overcast
+        field string rain
+        field string humidity
+        field string waves
+        field string windDir
+        field string windStr
+        field string gusts
+        field string lightnings
+        field string moonIntensity
+        field string moonPhase
+        field string sunOrMoon
    }
 
    class config_state {
@@ -116,23 +147,23 @@ classDiagram
 %%   '  link fields in each category
     mission_config_file --> mission_info
     class mission_info {
-    tag string profileName
-      tag string connectedServer
-      field string author
-      field string onLoadName
-      field string onLoadMission
-      field string loadScreen
-    %%   ' field string header
-      field string gameType
-      field int minPlayers
-      field int maxPlayers
-      field int onLoadIntro
-      field int onLoadMissionTime
-      field int onLoadIntroTime
-      field string briefingName
-      field string overviewPicture
-      field string overviewText
-      field string overviewTextLocked
+        tag string profileName
+        tag string connectedServer
+        field string author
+        field string onLoadName
+        field string onLoadMission
+        field string loadScreen
+        %%   field string header
+        field string gameType
+        field int minPlayers
+        field int maxPlayers
+        field int onLoadIntro
+        field int onLoadMissionTime
+        field int onLoadIntroTime
+        field string briefingName
+        field string overviewPicture
+        field string overviewText
+        field string overviewTextLocked
     }
 
     mission_config_file --> respawn
@@ -232,41 +263,141 @@ classDiagram
       field string objectViewDistance
    }
 
-   class player_state {
-
-   }
-
-
-
+   class player_state
 
 
     player_state --> player_identity
     class player_identity {
-            tag string profileName
-      tag string connectedServer
-      field string playerID
-      field string ownerId
-      field string playerUID
-      field string profileName
-      field string displayName
-      field string steamName
-      field bool isHC
+        capture: MissionEH, OnUserConnected
+        capture: MissionEH, OnUserDisconnected
+        capture: MissionEH, PlayerConnected
+        capture: MissionEH, PlayerDisconnected
+        tag string profileName
+        tag string connectedServer
+        field string playerID
+        field string ownerId
+        field string playerUID
+        field string profileName
+        field string displayName
+        field string steamName
+        field bool isHC
+        field bool isJip
+        field string roleDescription
     }
 
     player_state --> player_status
     class player_status {
-            tag string profileName
-      tag string connectedServer
-      field int clientStateNumber
-      field int adminState
+        capture: MissionEH, OnUserConnected
+        capture: MissionEH, OnUserDisconnected
+        capture: MissionEH, PlayerConnected
+        capture: MissionEH, PlayerDisconnected
+        capture: MissionEH, OnUserClientStateChanged
+        capture: MissionEH, OnUserAdminStateChanged
+        tag string profileName
+        tag string connectedServer
+        field string playerUID
+        field int clientStateNumber
+        field int adminState
     }
 
     player_state --> player_performance
     class player_performance {
-            tag string profileName
-      tag string connectedServer
-      field float avgPing
-      field float avgBandwidth
-      field float desync
+        capture: ServerPoll
+        tag string profileName
+        tag string connectedServer
+        field string playerUID
+        field float avgPing
+        field float avgBandwidth
+        field float desync
     }
 
+    player_state --> unit_loadout
+    class unit_loadout {
+        capture: InventoryClosedEH
+        tag string profileName
+        tag string connectedServer
+        field string playerUID
+        field string uniform
+        field string vest
+        field string backpack
+		field string headgear
+		field string goggles
+		field string hmd
+		field string primaryWeapon
+		field string primaryWeaponMagazine
+		field string secondaryWeapon
+		field string secondaryWeaponMagazine
+		field string handgunWeapon
+		field string handgunMagazine
+    }
+
+    player_state --> unit_state
+    class unit_state {
+        tag string connectedServer
+        tag string playerUID
+        field float health
+        field bool is_unconscious
+        field bool is_cardiac_arrest
+        field bool is_captive
+        field bool in_vehicle
+        field string vehicle_role
+        field float speed_kmh
+    }
+
+class player_events
+
+player_events --> Dammaged
+    class Dammaged {
+        capture: UnitEH, Dammaged
+        tag string connectedServer
+        tag string playerUID
+        field string selection
+        field string damage
+        field string hitIndex
+        field string hitPoint
+        field string shooter
+        field string projectile
+    }
+
+    player_events --> FiredMan
+    class FiredMan {
+        capture: UnitEH, FiredMan
+        tag string connectedServer
+        tag string playerUID
+        field string weapon
+        field string muzzle
+        field string mode
+        field string ammo
+        field string magazine
+        field string vehicle
+        field string vehicleClass
+    }
+
+    player_events --> GetInMan
+    class GetInMan {
+        capture: UnitEH, GetInMan
+        tag string connectedServer
+        tag string playerUID
+        field string role
+        field string vehicle
+        field string turret
+    }
+    player_events --> GetOutMan
+    class GetOutMan {
+        capture: UnitEH, GetOutMan
+        tag string connectedServer
+        tag string playerUID
+        field string role
+        field string vehicle
+        field string turret
+    }
+
+    player_events --> HandleScore
+    class HandleScore {
+        capture: UnitEH, HandleScore
+        tag string connectedServer
+        tag string playerUID
+        field int score
+        field string object
+        field string objectclass
+    }

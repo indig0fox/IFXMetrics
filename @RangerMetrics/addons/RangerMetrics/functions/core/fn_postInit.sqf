@@ -1,6 +1,7 @@
 // if (!isServer) exitWith {};
 
 if (is3DEN || !isMultiplayer) exitWith {};
+if (!isServer && hasInterface) exitWith {};
 
 RangerMetrics_cbaPresent = isClass(configFile >> "CfgPatches" >> "cba_main");
 RangerMetrics_aceMedicalPresent = isClass(configFile >> "CfgPatches" >> "ace_medical_status");
@@ -10,6 +11,8 @@ RangerMetrics_initialized = false;
 RangerMetrics_run = false;
 RangerMetrics_nextID = 0;
 RangerMetrics_messageQueue = createHashMap;
+// for debug, view messages in queue
+// RangerMetrics_messageQueue apply {[_x, count _y]};
 RangerMetrics_sendBatchHandle = scriptNull;
 
 [format ["Instance name: %1", profileName]] call RangerMetrics_fnc_log;
@@ -33,14 +36,13 @@ RangerMetrics_settings set [
     "influxDB",
     createHashMapFromArray [
         ["host", _settingsLoaded#1],
-        ["org", _settingsLoaded#2],
-        ["defaultBucket", _settingsLoaded#3]
+        ["org", _settingsLoaded#2]
     ]
 ];
 RangerMetrics_settings set [
     "arma3",
     createHashMapFromArray [
-        ["refreshRateMs", _settingsLoaded#4]
+        ["refreshRateMs", _settingsLoaded#3]
     ]
 ];
 
@@ -51,18 +53,15 @@ if (_dbConnection isEqualTo "") exitWith {
     ["Failed to connect to InfluxDB, disabling"] call RangerMetrics_fnc_log;
 };
 
-(parseSimpleArray _dbConnection) call RangerMetrics_fnc_log;
+_response = parseSimpleArray _dbConnection;
+(_response) call RangerMetrics_fnc_log;
+systemChat str _response;
 
 // send server profile name to all clients with JIP, so HC or player reporting knows what server it's connected to
 if (isServer) then {
     ["RangerMetrics_serverProfileName", profileName] remoteExecCall ["setVariable", 0, true];
     RangerMetrics_serverProfileName = profileName;
 };
-
-
-addMissionEventHandler ["ExtensionCallback", {
-    _this call RangerMetrics_fnc_callbackHandler;
-}];
 
 
 // define the metrics to capture by sideloading definition files
@@ -93,13 +92,28 @@ RangerMetrics_captureDefinitions = createHashMapFromArray [
 ];
 
 
-// add missionEventHandlers on server
+
+// add missionEventHandlers on server only
 {_x params ["_handleName", "_code"];
-    missionNamespace setVariable [
-        ("RangerMetrics" + "_MEH_" + _handleName),
-        (addMissionEventHandler [_handleName, _code])
-    ];
+    if (!isServer) exitWith {};
+    // try {
+        _handle = (addMissionEventHandler [_handleName, _code]);
+    // } catch {
+        // _handle = nil;
+    // };
+    if (isNil "_handle") then {
+        [format["Failed to add Mission event handler: %1", [_handleName]], "ERROR"] call RangerMetrics_fnc_log;
+    } else {
+        missionNamespace setVariable [
+            ("RangerMetrics" + "_MEH_" + _handleName),
+            _handle
+        ];
+        true;
+    };
 } forEach ((RangerMetrics_captureDefinitions get "ServerEvent") get "MissionEventHandlers");
+
+
+
 
 // begin server polling
 {
@@ -120,30 +134,65 @@ RangerMetrics_captureDefinitions = createHashMapFromArray [
 
 // set up CBA event listeners
 {_x params ["_handleName", "_code"];
-    missionNamespace setVariable [
-        ("RangerMetrics" + "_CBAEH_" + _handleName),
-        ([_handleName, _code] call CBA_fnc_addEventHandlerArgs)
-    ];
+    private "_handle";
+    // try {
+        _handle = ([_handleName, _code] call CBA_fnc_addEventHandlerArgs);
+    // } catch {
+    //     _handle = nil;
+    // };
+
+    if (isNil "_handle") then {
+        [format["Failed to add CBA event handler: %1", [_handleName, _code]], "ERROR"] call RangerMetrics_fnc_log;
+    } else {
+        missionNamespace setVariable [
+            ("RangerMetrics" + "_CBAEH_" + _handleName),
+            _handle
+        ];
+        true;
+    };
 } forEach (RangerMetrics_captureDefinitions get "CBAEvent");
 
 
-// set up CBA class inits if CBA loaded
-call RangerMetrics_fnc_classHandlers;
 
 
+[] spawn {
+    sleep 1;
+    isNil {
+        addMissionEventHandler [
+            "ExtensionCallback",
+            RangerMetrics_fnc_callbackHandler
+        ];
 
-RangerMetrics_initialized = true;
-RangerMetrics_run = true;
-["RangerMetrics_run", true] remoteExecCall ["setVariable", 0, true];
+        // set up CBA class inits if CBA loaded
+        call RangerMetrics_fnc_classHandlers;
+
+        private _meh = allVariables missionNamespace select {
+            _x find (toLower "RangerMetrics_MEH_") == 0
+        };
+        private _cba = allVariables missionNamespace select {
+            _x find (toLower "RangerMetrics_CBAEH_") == 0
+        };
+        private _serverPoll = allVariables missionNamespace select {
+            _x find (toLower "RangerMetrics_captureBatchHandle_") == 0
+        };
+
+        [format ["Mission event handlers: %1", _meh]] call RangerMetrics_fnc_log;
+        [format ["CBA event handlers: %1", _cba]] call RangerMetrics_fnc_log;
+        [format ["Server poll handles: %1", _serverPoll]] call RangerMetrics_fnc_log;
+
+        RangerMetrics_initialized = true;
+        RangerMetrics_run = true;
+        ["RangerMetrics_run", true] remoteExecCall ["setVariable", 0];
 
 
+        // start sending
+        [{
+            params ["_args", "_idPFH"];
+            if (scriptDone RangerMetrics_sendBatchHandle) then {
+                RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
+            };
+            // call RangerMetrics_fnc_send;
+        }, 2, []] call CBA_fnc_addPerFrameHandler;
+    };
+};
 
-
-// start sending
-[{
-    params ["_args", "_idPFH"];
-    // if (scriptDone RangerMetrics_sendBatchHandle) then {
-    //     RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
-    // };
-    call RangerMetrics_fnc_send;
-}, 3, []] call CBA_fnc_addPerFrameHandler;

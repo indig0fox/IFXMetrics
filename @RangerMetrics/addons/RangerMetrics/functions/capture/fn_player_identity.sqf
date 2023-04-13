@@ -14,12 +14,18 @@ private _fields = [
 	["bool", "isJip", _jip]
 ];
 
+// Role description
+private _roleDescription = roleDescription _unit;
+if (_roleDescription isNotEqualTo "") then {
+	_fields pushBack ["string", "roleDescription", _roleDescription];
+};
+
 [
 	"player_state",
 	"player_identity",
 	[
-		["string", "playerUID", getPlayerUID player]
+		["string", "playerUID", _playerUID]
 	],
 	_fields,
-	nil
+	["server"]
 ] call RangerMetrics_fnc_queue;

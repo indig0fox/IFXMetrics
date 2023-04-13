@@ -19,7 +19,7 @@ if (RangerMetrics_cbaPresent) then { // CBA is running, use PFH
 
     This system means that capture and sending are occurring in the scheduled environment, not blocking the server, while maintaining the timestamps of when each point was captured. The cycles of each will only occur at most once per 2 seconds, leaving plenty of time, and there will never be more than one call for each at a time.
     */
-    [{
+    private _handle = [{
         params ["_args", "_idPFH"];
         _args params ["_captureHandleName", "_functions"];
 
@@ -40,9 +40,22 @@ if (RangerMetrics_cbaPresent) then { // CBA is running, use PFH
         // call direct
         [format["Running %1 functions for %2", count _functions, _captureHandleName], "DEBUG"] call RangerMetrics_fnc_log;
         {
-            call _x;
+            _x params ["_whereToRun", "_scriptBlock"];
+            if (
+                _whereToRun find "server" == -1 &&
+                !isServer
+            ) exitWith {false};
+
+            if (
+                _whereToRun find "hc" == -1 &&
+                (!hasInterface && !isDedicated)
+            ) exitWith {false};
+
+            [] spawn _scriptBlock;
         } forEach _functions;
     }, _interval, [_captureHandleName, _functions]] call CBA_fnc_addPerFrameHandler;
+    
+    missionNamespace setVariable [_captureHandleName, _handle];
 
 
 } else { // CBA isn't running, use sleep
@@ -51,10 +64,21 @@ if (RangerMetrics_cbaPresent) then { // CBA is running, use PFH
         while {true} do {
             if (!RangerMetrics_run) exitWith {};
 			{
-                call _x;
+                _x  params ["_whereToRun", "_scriptBlock"];
+                if (
+                    _whereToRun find "server" == -1 &&
+                    !isServer
+                ) exitWith {false};
+
+                if (
+                    _whereToRun find "hc" == -1 &&
+                    (!hasInterface && !isDedicated)
+                ) exitWith {false};
+
+                [] spawn _scriptBlock;
             } forEach _functions;
 
-			sleep _interval;
+			sleep (_interval * 2);
         };
     };
 };

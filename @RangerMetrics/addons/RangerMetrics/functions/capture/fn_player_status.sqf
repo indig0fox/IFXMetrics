@@ -7,7 +7,8 @@ params ["_playerID", "_ownerId", "_playerUID", "_profileName", "_displayName", "
 	[["string", "playerUID", _playerUID]],
 	[
 		["int", "clientStateNumber", _clientState],
-		["int", "adminState", _adminState]
+		["int", "adminState", _adminState],
+		["string", "profileName", _profileName]
 	],
-	nil
+	["server"]
 ] call RangerMetrics_fnc_queue;

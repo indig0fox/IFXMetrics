@@ -2,6 +2,8 @@ if (!RangerMetrics_run) exitWith {};
 
 params ["_channel", "_owner", "_from", "_text", "_person", "_name", "_strID", "_forcedDisplay", "_isPlayerMessage", "_sentenceType", "_chatMessageType"];
 
+// if (!_isPlayerMessage) exitWith {};
+
 private _fields = [
 	["int", "channel", _channel],
 	["int", "owner", _owner],
@@ -17,24 +19,22 @@ private _fields = [
 ];
 
 // we need special processing to ensure the object is valid and we have a playerUid. Line protocol doesn't support empty string
-private "_playerUid";
-if (isNil "_person") then {
-	_playerUid = "";
+private "_playerUID";
+
+if (parseNumber _strID > 1) then {
+	_playerUID = (getUserInfo _strID)#2;
 } else {
-	if !(objNull isEqualType _person) then {
-		_playerUid = getPlayerUID _person;
-	} else {
-		_playerUid = "";
-	};
+	_playerUID = "";
 };
 
-if (_playerUid isNotEqualTo "") then {
-	_fields pushBack ["string", "playerUid", _playerUid];
+if (_playerUID isNotEqualTo "") then {
+	_fields pushBack ["string", "playerUID", _playerUid];
 };
 
 [
 	"server_events",
 	"HandleChatMessage",
 	nil,
-	_fields
+	_fields,
+	["server"]
 ] call RangerMetrics_fnc_queue;

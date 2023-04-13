@@ -26,5 +26,6 @@ if (_ownerUID isEqualTo "") then {
 		["string", "marker", _markerData],
 		["number", "channelNumber", _channelNumber],
 		["string", "owner", _ownerUID]
-	]
+	],
+	["server"]
 ] call RangerMetrics_fnc_queue;

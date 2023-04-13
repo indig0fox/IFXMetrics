@@ -1,23 +1,32 @@
+if (!isServer) exitWith {};
+
 if (!RangerMetrics_cbaPresent) exitWith {
 	[
 		format["RangerMetrics: CBA not present, aborting class EHs."],
 		"WARN"
 	] call RangerMetrics_fnc_log;
+	false;
+	
+	// TODO: Add non-CBA compatibility for unit handler & id application
+	// addMissionEventHandler ["EntityCreated", {
 };
 
 ///////////////////////////////////////////////////////////////////////
 // Initialize all units
 ///////////////////////////////////////////////////////////////////////
-["All", "InitPost", {
-	private _unit = _this # 0;
 
+["Man", "InitPost", {
+	params ["_unit"];
+	[_unit] call RangerMetrics_cDefinitions_fnc_unit_handlers;
 
-	if (_unit isKindOf "CAManBase" && isPlayer _unit) then {
-		[_unit] call RangerMetrics_fnc_initUnit;
-	};
+	_unit setVariable [
+		"RangerMetrics_id",
+		RangerMetrics_nextID,
+		true
+	];
 
-
-	_unit setVariable ["RangerMetrics_id", RangerMetrics_nextID, true];
+	[_unit] call RangerMetrics_capture_fnc_unit_inventory;
+	[_unit] call RangerMetrics_capture_fnc_unit_state;
 
 	if (RangerMetrics_debug) then {
 		[

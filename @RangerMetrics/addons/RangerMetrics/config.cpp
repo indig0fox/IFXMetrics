@@ -15,11 +15,13 @@ class CfgFunctions {
 			file = "\RangerMetrics\functions\capture\EHOnly";
 			class ace_unconscious {};
 			class EntityKilled {};
+			class Explosion {};
 			class FiredMan {};
 			class HandleChatMessage {};
 			class MarkerCreated {};
 			class MarkerDeleted {};
 			class MarkerUpdated {};
+			class milsim_serverEfficiency {};
 		};
 	}
 	class RangerMetrics_cDefinitions {
@@ -30,6 +32,7 @@ class CfgFunctions {
 			class client_poll {};
 			// class clientEvent {};
 			class server_CBA {};
+			class unit_handlers {};
 		};
 	};
 	class RangerMetrics_capture {
@@ -63,7 +66,6 @@ class CfgFunctions {
 			class sendClientPoll {};
 			class startServerPoll {};
 			class classHandlers {};
-			class initUnit {};
 		};
 		class helpers {
 			file = "\RangerMetrics\functions\helpers";

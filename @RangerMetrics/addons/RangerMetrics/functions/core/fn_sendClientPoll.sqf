@@ -1,6 +1,6 @@
 // format [interval, [[handleName, code], [handleName, code], ...]]
 [_this, {
-	if !(hasInterface || isDedicated) exitWith {};
+	if (!hasInterface || isDedicated) exitWith {};
 	params [
 		["_interval", 5, [5]],
 		["_pollItems", []]
@@ -13,12 +13,12 @@
 
 		private _runningCBA = (isClass(configFile >> "CfgPatches" >> "cba_main"));
 		if (_runningCBA) then {
-			localNamespace setVariable [
+			missionNamespace setVariable [
 				_handleName,
 				[_code, _interval, _handleName] call CBA_fnc_addPerFrameHandler
 			];
 		} else {
-			localNamespace setVariable [
+			missionNamespace setVariable [
 				_handleName,
 				[_handleName, _interval] spawn {
 					params [

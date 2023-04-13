@@ -1,6 +1,8 @@
 if (!RangerMetrics_run) exitWith {};
 params ["_killed", "_killer", "_instigator"];
 
+if (!isPlayer _killed) exitWith {}; // only track player deaths
+
 // check in case ACE is active and lastDamageSource has been broadcast via addLocalSoldierEH
 _instigator = _unit getVariable [
 	"ace_medical_lastDamageSource", 
@@ -13,7 +15,7 @@ if (isNull _instigator) then { _instigator = _killer }; // player driven vehicle
 if (isNull _instigator) then { _instigator = _killed };
 // hint format ["Killed By %1", name _instigator];
 
-
+if (!isPlayer _killed && !isPlayer _instigator) exitWith {}; // only track player kills
 
 private _tags = [];
 private _fields = [];
@@ -37,5 +39,5 @@ if (name _killed != "") then {
 	"EntityKilled",
 	_tags,
 	_fields,
-	nil
+	["server"]
 ] call RangerMetrics_fnc_queue;

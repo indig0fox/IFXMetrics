@@ -21,13 +21,17 @@ if (_value isEqualType []) then {
 	_value = [_value, '""', "'"] call RangerMetrics_fnc_stringReplace; 
 };
 
+_key = [_key, ',', "\,"] call RangerMetrics_fnc_stringReplace; 
+_key = [_key, '=', "\="] call RangerMetrics_fnc_stringReplace; 
+_key = [_key, ' ', "\ "] call RangerMetrics_fnc_stringReplace;
+
 if (_section isEqualTo "tag") exitWith {
 	switch (_valueType) do {
 		case "string": {
 			_value = [_value, ',', "\,"] call RangerMetrics_fnc_stringReplace; 
 			_value = [_value, '=', "\="] call RangerMetrics_fnc_stringReplace; 
 			_value = [_value, ' ', "\ "] call RangerMetrics_fnc_stringReplace;
-			_value = format['%1="%2"', _key, _value];
+			_value = format['%1=%2', _key, _value];
 		};
 		case "int": {
 			_value = format['%1=%2i', _key, _value];
@@ -46,7 +50,7 @@ if (_section isEqualTo "field") exitWith {
 	switch (_valueType) do {
 		case "string": {
 			_value = [_value, '\', "\\"] call RangerMetrics_fnc_stringReplace; 
-			_value = [_value, '"', '\"'] call RangerMetrics_fnc_stringReplace; 
+			_value = [_value, '"', '\"'] call RangerMetrics_fnc_stringReplace;
 			_value = format['%1="%2"', _key, _value];
 		};
 		case "int": {

@@ -9,12 +9,11 @@ if (_owner isEqualTo "") exitWith {};
 
 // Get marker
 private _markerData = _marker call BIS_fnc_markerToString;
+if (_markerData isEqualTo "") exitWith {};
 
 // Get owner playerUID
 private _ownerUID = getPlayerUID _owner;
-if (_ownerUID isEqualTo "") then {
-	_ownerUID = "-1";
-};
+if (_ownerUID isEqualTo "") exitWith {};
 
 [
 	"server_events",
@@ -26,5 +25,6 @@ if (_ownerUID isEqualTo "") then {
 		["string", "marker", _markerData],
 		["number", "channelNumber", _channelNumber],
 		["string", "owner", _ownerUID]
-	]
+	],
+	["server"]
 ] call RangerMetrics_fnc_queue;

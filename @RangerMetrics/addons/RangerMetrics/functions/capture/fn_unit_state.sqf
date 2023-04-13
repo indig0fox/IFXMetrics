@@ -1,10 +1,24 @@
 if (!RangerMetrics_run) exitWith {};
 
-params ["_unit"];
+params [[
+	"_unit", objNull, [objNull]
+]];
+
 if (isNull _unit || !(isPlayer _unit)) exitWith {};
 
+// Used in Dammaged EH, so add a 1s delay to prevent spamming
+_checkDelay = 1;
+_lastCheck = _unit getVariable [
+	"RangerMetrics_lastUnitStateCheck",
+	diag_tickTime
+];
+if (
+	(_lastCheck + _checkDelay) > diag_tickTime
+) exitWith {};
+_unit setVariable ["RangerMetrics_lastUnitStateCheck", diag_tickTime];
+
 // Get owner playerUID
-private _unitUID = getPlayerUID _unitUID;
+private _unitUID = getPlayerUID _unit;
 if (_unitUID isEqualTo "") exitWith {};
 
 // Medical info
@@ -18,7 +32,8 @@ if (RangerMetrics_aceMedicalPresent) then {
 };
 
 // Vehicle info
-if (!isNull (objectParent _unit)) then {
+private _inVehicle = !isNull (objectParent _unit);
+if (_inVehicle) then {
 	_crew = fullCrew (objectParent _unit);
 	_pos = _crew find {(_x select 0) isEqualTo _unit};
 	_vehicleRole = toLower _crew select _pos select 1;
@@ -32,19 +47,13 @@ private _fields = [
 	["bool", "is_unconscious", _isUnconscious],
 	["bool", "is_cardiac_arrest", _isInCardiacArrest],
 	["bool", "is_captive", captive _unit],
-	["bool", "in_vehicle", !isNull (objectParent _unit)],
+	["bool", "in_vehicle", _inVehicle],
 	["string", "vehicle_role", _vehicleRole],
 	["float", "speed_kmh", speed _unit]
 ];
 
-// Role description
-private _roleDescription = roleDescription _unit;
-if (_roleDescription isNotEqualTo "") then {
-	_fields pushBack ["string", "roleDescription", _roleDescription];
-};
-
 // Traits
-private _playerTraits = getAllUnitTraits player;
+private _playerTraits = getAllUnitTraits _unit;
 {
 	private _valueType = typeNAME (_x select 1);
 	switch (_valueType) do {

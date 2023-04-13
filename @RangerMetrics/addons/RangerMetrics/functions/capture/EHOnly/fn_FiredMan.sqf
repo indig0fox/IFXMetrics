@@ -1,4 +1,9 @@
-params ["_unit", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile", "_vehicle"];
+params [
+	["_unit", objNull],
+	"_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile", "_vehicle"
+];
+
+if (isNull _unit) exitWith {};
 private _unitPlayerId = getPlayerId _unit;
 private _userInfo = getUserInfo _unitPlayerId;
 
@@ -17,5 +22,6 @@ private _userInfo = getUserInfo _unitPlayerId;
 		// ["object", "projectile", _projectile],
 		["string", "vehicle", [configOf _vehicle] call displayName],
 		["string", "vehicleClass", typeOf _vehicle]
-	]
+	],
+	["server"]
 ] call RangerMetrics_fnc_queue;
