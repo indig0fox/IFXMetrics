@@ -5,7 +5,7 @@ params [
 ];
 
 if (isNull _unit) exitWith {false};
-// if (!isPlayer _unit) exitWith {};
+if (!isPlayer _unit) exitWith {};
 
 // do not check more than once every 15 seconds
 _checkDelay = 15;
@@ -47,7 +47,6 @@ if (_unitId isEqualTo -1) exitWith {false};
 	"unit_loadout", 
 	[ 
 		["string", "playerUID", _playerUID], 
-		["string", "unitId", str _unitId],
 		["string", "format", "className"]
 	], 
 	_classItemCounts,
