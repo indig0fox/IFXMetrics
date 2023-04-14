@@ -2,7 +2,7 @@ class CfgPatches {
 	class RangerMetrics {
 		units[] = {};
 		weapons[] = {};
-		requiredVersion = 0.1;
+		requiredVersion = 2.10;
 		requiredAddons[] = {};
 		author[] = {"EagleTrooper","Gary","IndigoFox"};
 		authorUrl = "http://example.com";
@@ -10,6 +10,13 @@ class CfgPatches {
 };
 
 class CfgFunctions {
+	class RangerMetrics_callback {
+		class functions {
+			file = "\RangerMetrics\functions\callbackHandlers";
+			class callbackHandler {};
+			class loadSettings {};
+		};
+	};
 	class RangerMetrics_event {
 		class functions {
 			file = "\RangerMetrics\functions\capture\EHOnly";
@@ -23,7 +30,7 @@ class CfgFunctions {
 			class MarkerUpdated {};
 			class milsim_serverEfficiency {};
 		};
-	}
+	};
 	class RangerMetrics_cDefinitions {
 		class functions {
 			file = "\RangerMetrics\functions\captureDefinitions";
@@ -62,7 +69,6 @@ class CfgFunctions {
 			class log {};
 			class queue {};
 			class send {};
-			class callbackHandler {};
 			class sendClientPoll {};
 			class startServerPoll {};
 			class classHandlers {};

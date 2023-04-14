@@ -19,49 +19,18 @@ RangerMetrics_sendBatchHandle = scriptNull;
 [format ["CBA detected: %1", RangerMetrics_cbaPresent]] call RangerMetrics_fnc_log;
 ["Initializing v0.1"] call RangerMetrics_fnc_log;
 
-
-// load settings from extension / settings.json
-private _settingsLoaded = "RangerMetrics" callExtension "loadSettings";
-// if (isNil "_settingsLoaded") exitWith {
-//     ["Extension not found, disabling"] call RangerMetrics_fnc_log;
-//     RangerMetrics_run = false;
-// };
-if (_settingsLoaded isEqualTo [] || _settingsLoaded isEqualTo "") exitWith {
-    ["Failed to load settings, exiting", "ERROR"] call RangerMetrics_fnc_log;
-};
-_settingsLoaded = parseSimpleArray (_settingsLoaded);
-[format["Settings loaded: %1", _settingsLoaded]] call RangerMetrics_fnc_log;
-RangerMetrics_settings = createHashMap;
-RangerMetrics_settings set [
-    "influxDB",
-    createHashMapFromArray [
-        ["host", _settingsLoaded#1],
-        ["org", _settingsLoaded#2]
-    ]
-];
-RangerMetrics_settings set [
-    "arma3",
-    createHashMapFromArray [
-        ["refreshRateMs", _settingsLoaded#3]
-    ]
+// Create listener - extension calls are async, so we need to listen for the response
+addMissionEventHandler [
+    "ExtensionCallback",
+    RangerMetrics_callback_fnc_callbackHandler
 ];
 
+// Deinit to start fresh. See callback handler for the remainder of async init code
+"RangerMetrics" callExtension "deinitExtension";
 
-// connect to DB, extension is now ready
-private _dbConnection = "RangerMetrics" callExtension "connectToInflux";
-if (_dbConnection isEqualTo "") exitWith {
-    ["Failed to connect to InfluxDB, disabling"] call RangerMetrics_fnc_log;
-};
 
-_response = parseSimpleArray _dbConnection;
-(_response) call RangerMetrics_fnc_log;
-systemChat str _response;
 
-// send server profile name to all clients with JIP, so HC or player reporting knows what server it's connected to
-if (isServer) then {
-    ["RangerMetrics_serverProfileName", profileName] remoteExecCall ["setVariable", 0, true];
-    RangerMetrics_serverProfileName = profileName;
-};
+if (true) exitWith {};
 
 
 // define the metrics to capture by sideloading definition files
@@ -158,10 +127,7 @@ RangerMetrics_captureDefinitions = createHashMapFromArray [
 [] spawn {
     sleep 1;
     isNil {
-        addMissionEventHandler [
-            "ExtensionCallback",
-            RangerMetrics_fnc_callbackHandler
-        ];
+
 
         // set up CBA class inits if CBA loaded
         call RangerMetrics_fnc_classHandlers;
