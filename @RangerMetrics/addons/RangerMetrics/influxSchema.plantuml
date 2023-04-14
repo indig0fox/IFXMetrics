@@ -10,6 +10,7 @@ classDiagram
     Measurement PlayerDisconnected
     Measurement OnUserClientStateChanged
     Measurement OnUserAdminStateChanged
+    Measurement OnUserKicked
     Meausrement HandleChatMessage
     Measurement MPEnded
     Measurement EntityCreated
@@ -19,11 +20,13 @@ classDiagram
     Measurement MarkerCreated
     Measurement MarkerDeleted
     Measurement MarkerUpdated
+    Measurement Service
    }
 
    server_state --> running_mission
    class running_mission {
         capture: ServerPoll, 60s
+        capture: MissionEH, MPEnded
         tag string profileName
         tag string connectedServer
         field string onLoadName
@@ -43,28 +46,34 @@ classDiagram
 
    server_state --> server_time
    class server_time {
-      tag string profileName
-      tag string connectedServer
-      field float diag_tickTime
-      field int serverTime
-      field float timeMultiplier
-      field int accTime
+        capture: ServerPoll, 3s
+        tag string profileName
+        tag string connectedServer
+        field float diag_tickTime
+        field int serverTime
+        field float timeMultiplier
+        field int accTime
    }
 
    server_state --> running_scripts
    class running_scripts {
-      tag string profileName
-      tag string connectedServer
-      field int spawn_total
-      field int execVM_total
-      field int exec_total
-      field int execFSM_total
-      field int pfh_total
+        capture: ServerPoll, 3s
+        tag string profileName
+        tag string connectedServer
+        field int spawn_total
+        field int execVM_total
+        field int exec_total
+        field int execFSM_total
+        field int pfh_total
    }
 
    server_state --> entities_local
    class entities_local {
-        capture: ServerPoll, 1s (customizable)
+        capture: ServerPoll, 30s
+        capture: MissionEH, EntityKilled
+        capture: MissionEH, EntityCreated
+        capture: MissionEH, GroupCreated
+        capture: MissionEH, GroupDeleted
         tag string profileName
         tag string connectedServer
         field int units_alive
@@ -74,7 +83,11 @@ classDiagram
    }
    server_state --> entities_global
    class entities_global {
-        capture: ServerPoll, 1s (customizable)
+        capture: ServerPoll, 30s
+        capture: MissionEH, EntityKilled
+        capture: MissionEH, EntityCreated
+        capture: MissionEH, GroupCreated
+        capture: MissionEH, GroupDeleted
         tag string profileName
         tag string connectedServer
         field int units_alive
@@ -84,7 +97,11 @@ classDiagram
    }
    server_state --> entities_remote
    class entities_remote {
-        capture: ServerPoll, 1s (customizable)
+        capture: ServerPoll, 30s
+        capture: MissionEH, EntityKilled
+        capture: MissionEH, EntityCreated
+        capture: MissionEH, GroupCreated
+        capture: MissionEH, GroupDeleted
         tag string profileName
         tag string connectedServer
         field int units_alive
@@ -95,7 +112,7 @@ classDiagram
 
    server_state --> server_performance
    class server_performance {
-        capture: ServerPoll, 1s (customizable)
+        capture: ServerPoll, 1s
         tag string profileName
         tag string connectedServer
         field string fps_avg
@@ -128,7 +145,6 @@ classDiagram
       Measurement mission_config_file
       Measurement addon_options
       Measurement mission_parameters
-      Measurement visual_settings
    }
 
    config_state --> mission_config_file
@@ -254,15 +270,6 @@ classDiagram
       field string missionGroup
     }
 
-
-   config_state --> visual_settings
-   class visual_settings {
-        tag string profileName
-      tag string connectedServer
-      field string getTIParameters
-      field string objectViewDistance
-   }
-
    class player_state
 
 
@@ -272,8 +279,9 @@ classDiagram
         capture: MissionEH, OnUserDisconnected
         capture: MissionEH, PlayerConnected
         capture: MissionEH, PlayerDisconnected
-        tag string profileName
+        capture: MissionEH, OnUserKicked
         tag string connectedServer
+        tag string playerUID
         field string playerID
         field string ownerId
         field string playerUID
@@ -293,9 +301,9 @@ classDiagram
         capture: MissionEH, PlayerDisconnected
         capture: MissionEH, OnUserClientStateChanged
         capture: MissionEH, OnUserAdminStateChanged
-        tag string profileName
+        capture: MissionEH, OnUserKicked
         tag string connectedServer
-        field string playerUID
+        tag string playerUID
         field int clientStateNumber
         field int adminState
     }
@@ -303,20 +311,19 @@ classDiagram
     player_state --> player_performance
     class player_performance {
         capture: ServerPoll
-        tag string profileName
         tag string connectedServer
-        field string playerUID
+        tag string playerUID
         field float avgPing
         field float avgBandwidth
         field float desync
     }
 
-    player_state --> unit_loadout
-    class unit_loadout {
+    player_state --> unit_inventory
+    class unit_inventory {
         capture: InventoryClosedEH
-        tag string profileName
         tag string connectedServer
-        field string playerUID
+        tag string playerUID
+        field string currentWeapon
         field string uniform
         field string vest
         field string backpack
@@ -333,6 +340,8 @@ classDiagram
 
     player_state --> unit_state
     class unit_state {
+        capture: UnitEH, GetInMan
+        capture: UnitEH, GetOutMan
         tag string connectedServer
         tag string playerUID
         field float health
@@ -342,6 +351,9 @@ classDiagram
         field bool in_vehicle
         field string vehicle_role
         field float speed_kmh
+        field string unitTraitX
+        field bool unitTraitY
+        field int unitTraitZ
     }
 
 class player_events
@@ -400,4 +412,24 @@ player_events --> Dammaged
         field int score
         field string object
         field string objectclass
+    }
+
+    player_events --> InventoryClosed
+    class InventoryClosed {
+        capture: UnitEH, InventoryClosed
+        tag string connectedServer
+        tag string playerUID
+        field string currentWeaponClass
+        field string uniformClass
+        field string vestClass
+        field string backpackClass
+        field string headgearClass
+        field string gogglesClass
+        field string hmdClass
+        field string primaryWeaponClass
+        field string primaryWeaponMagazineClass
+        field string secondaryWeaponClass
+        field string secondaryWeaponMagazineClass
+        field string handgunWeaponClass
+        field string handgunMagazineClass
     }
