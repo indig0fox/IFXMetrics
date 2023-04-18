@@ -36,7 +36,7 @@
 		["server_events", "PlayerConnected", [
 			["string", "playerUID", _userInfo#2]
 		], [
-			["int", "id", _id],
+			["string", "id", _id toFixed 0],
 			["string", "uid", _uid],
 			["string", "name", _name],
 			["bool", "jip", _jip],
@@ -53,7 +53,7 @@
 		["server_events", "PlayerDisconnected", [
 			["string", "playerUID", _userInfo#2]
 		], [
-			["int", "id", _id],
+			["string", "id", _id toFixed 0],
 			["string", "uid", _uid],
 			["string", "name", _name],
 			["bool", "jip", _jip],

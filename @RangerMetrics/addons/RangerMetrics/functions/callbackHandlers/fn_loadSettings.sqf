@@ -6,7 +6,7 @@ if (_function isEqualTo "loadSettingsJSON") exitWith {
 	RangerMetrics_recordingSettings = _data get "recordingSettings";
 
 	RangerMetrics_debug = RangerMetrics_settings get "arma3" get "debug";
-	
+
 	[
 		format [
 			"Settings loaded: %1",
@@ -16,8 +16,8 @@ if (_function isEqualTo "loadSettingsJSON") exitWith {
 	] call RangerMetrics_fnc_log;
 
 	if (isServer) then {
-		["RangerMetrics_serverProfileName", profileName] remoteExecCall ["setVariable", 0, true];
 		RangerMetrics_serverProfileName = profileName;
+		publicVariable "RangerMetrics_serverProfileName";
 	};
 	call RangerMetrics_fnc_initCapture;
 };

@@ -1,10 +1,10 @@
-params ["_fields", []];
+params [["_fields", []]];
 
 // Example:
-// [
-//     ["float", "milsim_raw_cps", "3207.98"],
-//     ["float", "milsim_cps", "1"]
-// ]
+// ["milsim_serverEfficiency", [[
+//   ["float", "milsim_raw_cps", "3207.98"],
+//   ["float", "milsim_cps", "1"]
+// ]]] call CBA_fnc_serverEvent;
 
 private _settings = RangerMetrics_recordingSettings get "CBAEventHandlers" get "milsimServerEfficiency";
 
