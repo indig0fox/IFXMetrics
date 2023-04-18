@@ -1,8 +1,10 @@
 if (!RangerMetrics_run) exitWith {};
 
+private _settings = RangerMetrics_recordingSettings get "weather";
+
 [
-	"server_state", // bucket to store the data
-	"weather", // measurement classifier inside of bucket
+	_settings get "bucket",
+	_settings get "measurement",
 	nil, // tags
 	[ // fields
 		["float", "fog", fog],

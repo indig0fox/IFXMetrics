@@ -1,8 +1,10 @@
 if (!RangerMetrics_run) exitWith {};
 
+private _settings = RangerMetrics_recordingSettings get "viewDistance";
+
 [
-	"server_state",
-	"view_distance",
+	_settings get "bucket",
+	_settings get "measurement",
 	nil,
 	[
 		["float", "objectViewDistance", getObjectViewDistance # 0],

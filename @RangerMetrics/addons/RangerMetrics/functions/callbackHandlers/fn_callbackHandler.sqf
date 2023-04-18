@@ -15,8 +15,12 @@ if (_data isEqualTo "") exitWith {
 // Parse response from string array
 private "_response";
 try {
-	diag_log format ["Raw callback: %1: %2", _function, _data];
-	_response = parseSimpleArray _data;
+	// diag_log format ["Raw callback: %1: %2", _function, _data];
+	if (_function find "JSON" > -1) then {
+		_response = [_data, 2] call CBA_fnc_parseJSON;
+	} else {
+		_response = parseSimpleArray _data;
+	};
 } catch {
 	[
 		format ["Callback invalid data: %1: %2", _function, _data],
@@ -35,11 +39,14 @@ switch (_function) do {
 			_response call RangerMetrics_fnc_log;
 		};
 	};
+	case "loadSettingsJSON": {
+		[_function, _response] call RangerMetrics_callback_fnc_loadSettings;
+	};
 	case "loadSettings": {
 		// Load settings
-		_response call RangerMetrics_callback_fnc_loadSettings;
+		[_function, _response] call RangerMetrics_callback_fnc_loadSettings;
 	};
 	default {
 		_response call RangerMetrics_fnc_log;
-	}
-}
+	};
+};

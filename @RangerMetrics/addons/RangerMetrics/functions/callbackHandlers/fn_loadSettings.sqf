@@ -1,4 +1,26 @@
-private _data = _this;
+params ["_function", "_data"];
+
+
+if (_function isEqualTo "loadSettingsJSON") exitWith {
+	RangerMetrics_settings = _data;
+	RangerMetrics_recordingSettings = _data get "recordingSettings";
+
+	RangerMetrics_debug = RangerMetrics_settings get "arma3" get "debug";
+	
+	[
+		format [
+			"Settings loaded: %1",
+			_data
+		],
+		"INFO"
+	] call RangerMetrics_fnc_log;
+
+	if (isServer) then {
+		["RangerMetrics_serverProfileName", profileName] remoteExecCall ["setVariable", 0, true];
+		RangerMetrics_serverProfileName = profileName;
+	};
+	call RangerMetrics_fnc_initCapture;
+};
 
 switch (_data select 0) do {
 	case "CREATED SETTINGS": {
@@ -7,23 +29,18 @@ switch (_data select 0) do {
 			"ERROR"
 		] call RangerMetrics_fnc_log;
 	};
-	case "SETTINGS LOADED": {
 
-		RangerMetrics_settings = createHashMapFromArray (_data # 1);
+	case "loadSettings": {
 		[
 			format [
-				"Settings loaded successfully from JSON. %1",
-				RangerMetrics_settings
+				"Setting loaded: %1",
+				_data
 			],
 			"INFO"
 		] call RangerMetrics_fnc_log;
 
-		// send server profile name to all clients with JIP, so HC or player reporting knows what server it's connected to
-		if (isServer) then {
-			["RangerMetrics_serverProfileName", profileName] remoteExecCall ["setVariable", 0, true];
-			RangerMetrics_serverProfileName = profileName;
-		};
 	};
+	
 	default {
 		[
 			_data select 0,

@@ -6,9 +6,11 @@ params ["_fields", []];
 //     ["float", "milsim_cps", "1"]
 // ]
 
+private _settings = RangerMetrics_recordingSettings get "CBAEventHandlers" get "milsimServerEfficiency";
+
 [
-	"server_state",
-	"server_efficiency",
+	_settings get "bucket",
+	_settings get "measurement",
 	nil,
 	_fields,
 	["server"]

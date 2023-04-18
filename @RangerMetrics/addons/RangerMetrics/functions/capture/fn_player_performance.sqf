@@ -1,15 +1,12 @@
 if (!RangerMetrics_run) exitWith {};
 
-private _settings = "recordingSettings.serverPolling.userPerformance" call RangerMetrics_fnc_getSetting;
-if (!_settings) exitWith {
-	[format["Error in settings lookup: %1", _settingsPath]] call RangerMetrics_fnc_log;
-};
-
-if !(_settings get "enabled") exitWith {false};
+private _settings = RangerMetrics_recordingSettings get "playerPerformance";
 
 {
 	_x params ["_playerID", "_ownerId", "_playerUID", "_profileName", "_displayName", "_steamName", "_clientState", "_isHC", "_adminState", "_networkInfo", "_unit"];
 	_networkInfo params ["_avgPing", "_avgBandwidth", "_desync"];
+
+	if (_unit == objNull || _isHC) exitWith {};
 
 	[
 		_settings get "bucket",

@@ -72,6 +72,7 @@ class CfgFunctions {
 			class sendClientPoll {};
 			class startServerPoll {};
 			class classHandlers {};
+			class initCapture {};
 		};
 		class helpers {
 			file = "\RangerMetrics\functions\helpers";
