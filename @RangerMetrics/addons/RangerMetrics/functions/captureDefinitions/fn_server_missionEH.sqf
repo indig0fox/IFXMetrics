@@ -32,7 +32,7 @@
 		private _userInfo = (getUserInfo _networkId);
 		_userInfo call RangerMetrics_capture_fnc_player_identity;
 		_userInfo call RangerMetrics_capture_fnc_player_status;
-		[_entity] call RangerMetrics_capture_fnc_unit_inventory;
+		// [_entity] call RangerMetrics_capture_fnc_unit_inventory;
 		["server_events", "PlayerConnected", [
 			["string", "playerUID", _userInfo#2]
 		], [
@@ -136,16 +136,16 @@
 		) exitWith {};
 		_this call RangerMetrics_event_fnc_EntityKilled;
 		call RangerMetrics_capture_fnc_entity_count;
-		[_entity] call RangerMetrics_capture_fnc_unit_inventory;
-		[_entity] call RangerMetrics_capture_fnc_unit_state;
+		// [_entity] call RangerMetrics_capture_fnc_unit_inventory;
+		// [_entity] call RangerMetrics_capture_fnc_unit_state;
 
 		[format["(EventHandler) EntityKilled fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["EntityRespawned", {
 		params ["_newEntity", "_oldEntity"];
 		call RangerMetrics_capture_fnc_entity_count;
-		[_entity] call RangerMetrics_capture_fnc_unit_inventory;
-		[_entity] call RangerMetrics_capture_fnc_unit_state;
+		// [_entity] call RangerMetrics_capture_fnc_unit_inventory;
+		// [_entity] call RangerMetrics_capture_fnc_unit_state;
 		[format["(EventHandler) EntityRespawned fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["GroupCreated", {
@@ -157,38 +157,38 @@
 		params ["_group"];
 		call RangerMetrics_capture_fnc_entity_count;
 		[format["(EventHandler) GroupDeleted fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	}],
-	["MarkerCreated", {
-		params ["_marker", "_channelNumber", "_owner", "_local"];
-		if (markerType _marker isEqualTo "") exitWith {};
-		_this call RangerMetrics_event_fnc_MarkerCreated;
-		[format["(EventHandler) MarkerCreated fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	}],
-	["MarkerDeleted", {
-		params ["_marker", "_channelNumber", "_owner", "_local"];
-		if (markerType _marker isEqualTo "") exitWith {};
-		_this call RangerMetrics_event_fnc_MarkerDeleted;
-		[format["(EventHandler) MarkerDeleted fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	}],
+	}]
+	// ["MarkerCreated", {
+	// 	params ["_marker", "_channelNumber", "_owner", "_local"];
+	// 	if (markerType _marker isEqualTo "") exitWith {};
+	// 	_this call RangerMetrics_event_fnc_MarkerCreated;
+	// 	[format["(EventHandler) MarkerCreated fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
+	// }],
+	// ["MarkerDeleted", {
+	// 	params ["_marker", "_channelNumber", "_owner", "_local"];
+	// 	if (markerType _marker isEqualTo "") exitWith {};
+	// 	_this call RangerMetrics_event_fnc_MarkerDeleted;
+	// 	[format["(EventHandler) MarkerDeleted fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
+	// }],
 	// ["MarkerUpdated", {
 	// 	params ["_marker", "_local"];
 		// if (markerType _marker isEqualTo "") exitWith {};
 	// 	_this call RangerMetrics_event_fnc_MarkerUpdated;
 	// }],
-	["Service", {
-		params ["_serviceVehicle", "_servicedVehicle", "_serviceType", "_needsService", "_autoSupply"];
-		[
-			"server_events",
-			"Service",
-			[
-				["string", "serviceVehicle", typeOf _serviceVehicle],
-				["string", "servicedVehicle", typeOf _servicedVehicle],
-				["int", "serviceType", _serviceType],
-				["bool", "needsService", _needsService],
-				["bool", "autoSupply", _autoSupply]
-			],
-			nil
-		] call RangerMetrics_fnc_queue;
-		[format["(EventHandler) Service fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	}]
+	// ["Service", {
+	// 	params ["_serviceVehicle", "_servicedVehicle", "_serviceType", "_needsService", "_autoSupply"];
+	// 	[
+	// 		"server_events",
+	// 		"Service",
+	// 		[
+	// 			["string", "serviceVehicle", typeOf _serviceVehicle],
+	// 			["string", "servicedVehicle", typeOf _servicedVehicle],
+	// 			["int", "serviceType", _serviceType],
+	// 			["bool", "needsService", _needsService],
+	// 			["bool", "autoSupply", _autoSupply]
+	// 		],
+	// 		nil
+	// 	] call RangerMetrics_fnc_queue;
+	// 	[format["(EventHandler) Service fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
+	// }]
 ]
