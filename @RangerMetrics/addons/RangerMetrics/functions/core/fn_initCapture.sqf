@@ -69,7 +69,7 @@
 		false;
     } else {
         missionNamespace setVariable [
-            ("RangerMetrics" + "_CBAEH_" + _settingName),
+            ("RangerMetrics" + "_CBAEH_" + _handleName),
             _handle
         ];
         true;
@@ -81,24 +81,24 @@
 
 
 
-private _meh = allVariables missionNamespace select {
+RangerMetrics_allMEH = allVariables missionNamespace select {
 	_x find (toLower "RangerMetrics_MEH_") == 0
 };
-private _cba = allVariables missionNamespace select {
+RangerMetrics_allCBA = allVariables missionNamespace select {
 	_x find (toLower "RangerMetrics_CBAEH_") == 0
 };
-private _serverPoll = allVariables missionNamespace select {
+RangerMetrics_allServerPoll = allVariables missionNamespace select {
 	_x find (toLower "RangerMetrics_serverPoll_") == 0
 };
 
-[format ["Mission event handlers: %1", _meh]] call RangerMetrics_fnc_log;
-[format ["CBA event handlers: %1", _cba]] call RangerMetrics_fnc_log;
-[format ["Server poll handles: %1", _serverPoll]] call RangerMetrics_fnc_log;
+[format ["Mission event handlers: %1", RangerMetrics_allMEH]] call RangerMetrics_fnc_log;
+[format ["CBA event handlers: %1", RangerMetrics_allCBA]] call RangerMetrics_fnc_log;
+[format ["Server poll handles: %1", RangerMetrics_allServerPoll]] call RangerMetrics_fnc_log;
 
 
-RangerMetrics_initialized = true;
-RangerMetrics_run = true;
-["RangerMetrics_run", true] remoteExecCall ["setVariable", 0];
+missionNamespace setVariable ["RangerMetrics_initialized", true, true];
+missionNamespace setVariable ["RangerMetrics_run", true, true];
+
 
 
 // start sending

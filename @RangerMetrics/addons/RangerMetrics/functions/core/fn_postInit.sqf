@@ -20,7 +20,7 @@ RangerMetrics_recordingSettings = createHashMap;
 
 [format ["Instance name: %1", profileName]] call RangerMetrics_fnc_log;
 [format ["CBA detected: %1", RangerMetrics_cbaPresent]] call RangerMetrics_fnc_log;
-["Initializing v0.1"] call RangerMetrics_fnc_log;
+["Initializing v0.0.2"] call RangerMetrics_fnc_log;
 
 // Create listener - extension calls are async, so we need to listen for the response
 addMissionEventHandler [

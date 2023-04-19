@@ -31,7 +31,6 @@ try {
 
 switch (_function) do {
 	case "deinitExtension": {
-		diag_log format ["RangerMetrics: deinitExtension: %1", _response];
 		// Our first call is deinitExtension. When we received a single "true" value, we can then run init processes for the extension connections.
 		if ((_response select 0) isEqualTo true) then {
 			"RangerMetrics" callExtension "initExtension";
@@ -45,6 +44,39 @@ switch (_function) do {
 	case "loadSettings": {
 		// Load settings
 		[_function, _response] call RangerMetrics_callback_fnc_loadSettings;
+	};
+	case "extensionReady": {
+		// deinitialize existing captures
+		if (!isNil "RangerMetrics_allMEH") then {
+			{
+				private _handle = missionNamespace getVariable _x;
+				if (isNil "_handle") then {continue};
+				private _EHName = (_x splitString "_") select 2;
+				removeMissionEventHandler [_EHName, _handle];
+				missionNamespace setVariable [_x, nil];
+			} forEach RangerMetrics_allMEH;
+		};
+
+		if (!isNil "RangerMetrics_allCBA") then {
+			{
+				private _handle = missionNamespace getVariable _x;
+				if (isNil "_handle") then {continue};
+				private _EHName = (_x splitString "_") select 2;
+				[_EHName, _handle] call CBA_fnc_removeEventHandler;
+				missionNamespace setVariable [_x, nil];
+			} forEach RangerMetrics_allCBA;
+		};
+		
+		if (!isNil "RangerMetrics_allServerPoll") then {
+			{
+				private _handle = missionNamespace getVariable _x;
+				if (isNil "_handle") then {continue};
+				terminate _handle;
+				missionNamespace setVariable [_x, nil];
+			} forEach RangerMetrics_allServerPoll;
+		};
+
+		call RangerMetrics_fnc_initCapture;
 	};
 	default {
 		_response call RangerMetrics_fnc_log;

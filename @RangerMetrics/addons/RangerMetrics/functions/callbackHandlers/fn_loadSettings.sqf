@@ -16,10 +16,12 @@ if (_function isEqualTo "loadSettingsJSON") exitWith {
 	] call RangerMetrics_fnc_log;
 
 	if (isServer) then {
-		RangerMetrics_serverProfileName = profileName;
-		publicVariable "RangerMetrics_serverProfileName";
+		missionNamespace setVariable [
+			"RangerMetrics_serverProfileName",
+			profileName,
+			true
+		];
 	};
-	call RangerMetrics_fnc_initCapture;
 };
 
 switch (_data select 0) do {

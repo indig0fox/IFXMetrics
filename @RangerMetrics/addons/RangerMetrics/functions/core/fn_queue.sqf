@@ -21,7 +21,17 @@ if (_tagContext find "world" > -1) then {
     _tags pushBack ["string", "world", toLower worldName];
 };
 if (_tagContext find "server" > -1) then {
-    _tags pushBack ["string", "connectedServer", RangerMetrics_serverProfileName];
+    private _serverProfile = missionNamespace getVariable [
+            "RangerMetrics_serverProfileName",
+            ""
+    ];
+    if (_serverProfile isNotEqualTo "") then {
+        _tags pushBack [
+            "string",
+            "connectedServer",
+            _serverProfile
+        ];
+    };
 };
 
 private _outTags = _tags apply {
