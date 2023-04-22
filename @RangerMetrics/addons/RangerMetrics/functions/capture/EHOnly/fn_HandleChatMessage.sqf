@@ -15,7 +15,7 @@ private _fields = [
 	["bool", "forcedDisplay", _forcedDisplay],
 	["bool", "isPlayerMessage", _isPlayerMessage],
 	["int", "sentenceType", _sentenceType],
-	["int", "chatMessageType", _chatMessageType]
+	["int", "chatMessageType", _chatMessageType toFixed 0]
 ];
 
 // we need special processing to ensure the object is valid and we have a playerUid. Line protocol doesn't support empty string

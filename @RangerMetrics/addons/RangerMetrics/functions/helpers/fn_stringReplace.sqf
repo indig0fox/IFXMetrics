@@ -13,9 +13,9 @@ if !(_str isEqualType "") exitWith {
 			"RangerMetrics_fnc_stringReplace: _str is not a string. %1",
 			_str
 		],
-		"ERROR"
+		"WARN"
 	] call RangerMetrics_fnc_log;
-	"";
+	str _str;
 };
 
 if (!(_find isEqualType [])) then {

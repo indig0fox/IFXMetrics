@@ -29,12 +29,12 @@
 	}],
 	["PlayerConnected", {
 		params ["_id", "_uid", "_name", "_jip", "_owner", "_idstr"];
-		private _userInfo = (getUserInfo _networkId);
+		private _userInfo = (getUserInfo _idstr);
 		_userInfo call RangerMetrics_capture_fnc_player_identity;
 		_userInfo call RangerMetrics_capture_fnc_player_status;
 		// [_entity] call RangerMetrics_capture_fnc_unit_inventory;
 		["server_events", "PlayerConnected", [
-			["string", "playerUID", _userInfo#2]
+			["string", "playerUID", _uid]
 		], [
 			["string", "id", _id toFixed 0],
 			["string", "uid", _uid],
@@ -47,11 +47,11 @@
 	}],
 	["PlayerDisconnected", {
 		params ["_id", "_uid", "_name", "_jip", "_owner", "_idstr"];
-		private _userInfo = (getUserInfo _networkId);
+		private _userInfo = (getUserInfo _idstr);
 		_userInfo call RangerMetrics_capture_fnc_player_identity;
 		_userInfo call RangerMetrics_capture_fnc_player_status;
 		["server_events", "PlayerDisconnected", [
-			["string", "playerUID", _userInfo#2]
+			["string", "playerUID", _uid]
 		], [
 			["string", "id", _id toFixed 0],
 			["string", "uid", _uid],

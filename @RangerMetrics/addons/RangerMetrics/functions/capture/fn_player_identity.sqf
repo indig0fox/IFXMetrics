@@ -8,7 +8,7 @@ private _settings = RangerMetrics_recordingSettings get "playerIdentity";
 
 private _fields = [
 	["string", "playerID", _playerID],
-	["string", "ownerId", _ownerId],
+	["int", "ownerId", _ownerId],
 	["string", "playerUID", _playerUID],
 	["string", "profileName", _profileName],
 	["string", "displayName", _displayName],
