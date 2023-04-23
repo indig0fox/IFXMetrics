@@ -102,7 +102,7 @@ missionNamespace setVariable ["RangerMetrics_run", true, true];
 
 
 // start sending
-[{
+RangerMetrics_sendHandler = [{
 	params ["_args", "_idPFH"];
 	if !(
 		missionNamespace getVariable [

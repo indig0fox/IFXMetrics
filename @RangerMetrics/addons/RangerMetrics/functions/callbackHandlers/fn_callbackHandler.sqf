@@ -76,6 +76,11 @@ switch (_function) do {
 			} forEach RangerMetrics_allServerPoll;
 		};
 
+		if (!isNil "RangerMetrics_sendHandler") then {
+			[RangerMetrics_sendHandler] call CBA_fnc_removePerFrameHandler;
+			missionNamespace setVariable ["RangerMetrics_sendHandler", nil];
+		};
+
 		if (
 			missionNamespace getVariable [
 				"RangerMetrics_run",
