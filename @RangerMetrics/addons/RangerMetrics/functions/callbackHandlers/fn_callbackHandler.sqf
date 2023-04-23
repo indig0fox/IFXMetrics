@@ -76,7 +76,14 @@ switch (_function) do {
 			} forEach RangerMetrics_allServerPoll;
 		};
 
-		call RangerMetrics_fnc_initCapture;
+		if (
+			missionNamespace getVariable [
+				"RangerMetrics_run",
+				false
+			]
+		) then {
+			call RangerMetrics_fnc_initCapture;
+		};
 	};
 	default {
 		_response call RangerMetrics_fnc_log;

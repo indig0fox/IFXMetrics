@@ -104,6 +104,12 @@ missionNamespace setVariable ["RangerMetrics_run", true, true];
 // start sending
 [{
 	params ["_args", "_idPFH"];
+	if !(
+		missionNamespace getVariable [
+			"RangerMetrics_run",
+			false
+		]
+	) exitWith {};
 	if (scriptDone RangerMetrics_sendBatchHandle) then {
 		RangerMetrics_sendBatchHandle = [] spawn RangerMetrics_fnc_send;
 	};
