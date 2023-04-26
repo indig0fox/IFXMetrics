@@ -19,7 +19,7 @@ class CfgFunctions {
 	};
 	class RangerMetrics_event {
 		class functions {
-			file = "\RangerMetrics\functions\capture\EHOnly";
+			file = "\RangerMetrics\functions\capture\serverEH";
 			class ace_unconscious {};
 			class EntityKilled {};
 			class Explosion {};
@@ -31,12 +31,17 @@ class CfgFunctions {
 			class milsim_serverEfficiency {};
 		};
 	};
+	class RangerMetrics_event {
+		class functions {
+			file = "\RangerMetrics\functions\capture\clientEH";
+		};
+	};
 	class RangerMetrics_cDefinitions {
 		class functions {
 			file = "\RangerMetrics\functions\captureDefinitions";
 			class server_poll {};
 			class server_missionEH {};
-			class client_poll {};
+			class client_EH {postInit = 1;};
 			// class clientEvent {};
 			class server_CBA {};
 			class unit_handlers {};

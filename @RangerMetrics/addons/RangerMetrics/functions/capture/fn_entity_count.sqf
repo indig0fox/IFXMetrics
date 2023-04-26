@@ -113,3 +113,21 @@ private _allPlayers = call BIS_fnc_listPlayers;
 	};
 
 } forEach [east, west, independent, civilian];
+
+
+
+if (isServer) then {
+	[
+		_settings get "bucket",
+		"player_count",
+		nil,
+		[
+			["int", "players_connected", {
+				private _info = getUserInfo _x;
+				if (!isNil "_info") then {
+					_info select 7
+				} else {false}
+			} count _allPlayers]
+		]
+	] call RangerMetrics_fnc_queue;
+};

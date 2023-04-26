@@ -16,8 +16,10 @@
 	["OnUserDisconnected", {
 		params ["_networkId", "_clientStateNumber", "_clientState"];
 		private _userInfo = (getUserInfo _networkId);
-		_userInfo call RangerMetrics_capture_fnc_player_identity;
-		_userInfo call RangerMetrics_capture_fnc_player_status;
+		if (!isNil "_userInfo") then {
+			_userInfo call RangerMetrics_capture_fnc_player_identity;
+			_userInfo call RangerMetrics_capture_fnc_player_status;
+		};
 		["server_events", "OnUserDisconnected", [
 			["string", "playerUID", _userInfo#2]
 		], [
@@ -45,22 +47,22 @@
 		]] call RangerMetrics_fnc_queue;
 		[format ["(EventHandler) PlayerConnected fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
-	["PlayerDisconnected", {
-		params ["_id", "_uid", "_name", "_jip", "_owner", "_idstr"];
-		private _userInfo = (getUserInfo _idstr);
-		_userInfo call RangerMetrics_capture_fnc_player_identity;
-		_userInfo call RangerMetrics_capture_fnc_player_status;
-		["server_events", "PlayerDisconnected", [
+	["HandleDisconnect", {
+		params ["_unit", "_id", "_uid", "_name"];
+		private _userInfo = (getUserInfo (_id toFixed 0));
+		if (!isNil "_userInfo") then {
+			_userInfo call RangerMetrics_capture_fnc_player_identity;
+			_userInfo call RangerMetrics_capture_fnc_player_status;
+		};
+		["server_events", "HandleDisconnect", [
 			["string", "playerUID", _uid]
 		], [
 			["string", "id", _id toFixed 0],
 			["string", "uid", _uid],
-			["string", "name", _name],
-			["bool", "jip", _jip],
-			["int", "owner", _owner],
-			["string", "idstr", _idstr]
+			["string", "name", _name]
 		]] call RangerMetrics_fnc_queue;
-		[format ["(EventHandler) PlayerDisconnected fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
+		[format ["(EventHandler) HandleDisconnect fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
+		false;
 	}],
 	["OnUserClientStateChanged", {
 		params ["_networkId", "_clientStateNumber", "_clientState"];
@@ -78,6 +80,7 @@
 	["OnUserAdminStateChanged", {
 		params ["_networkId", "_loggedIn", "_votedIn"];
 		private _userInfo = (getUserInfo _networkId);
+		if (isNil "_userInfo") exitWith {};
 		_userInfo call RangerMetrics_capture_fnc_player_status;
 		["server_events", "OnUserAdminStateChanged", [
 			["string", "playerUID", _userInfo#2]
@@ -91,6 +94,7 @@
 	["OnUserKicked", {
 		params ["_networkId", "_kickTypeNumber", "_kickType", "_kickReason", "_kickMessageIncReason"];
 		private _userInfo = (getUserInfo _networkId);
+		if (isNil "_userInfo") exitWith {};
 		_userInfo call RangerMetrics_capture_fnc_player_identity;
 		_userInfo call RangerMetrics_capture_fnc_player_status;
 		["server_events", "OnUserKicked", [

@@ -79,8 +79,6 @@
 
 
 
-
-
 RangerMetrics_allMEH = allVariables missionNamespace select {
 	_x find (toLower "RangerMetrics_MEH_") == 0
 };
