@@ -18,7 +18,7 @@ class CfgFunctions {
 		};
 	};
 	class RangerMetrics_event {
-		class functions {
+		class server {
 			file = "\RangerMetrics\functions\capture\serverEH";
 			class ace_unconscious {};
 			class EntityKilled {};
@@ -30,9 +30,7 @@ class CfgFunctions {
 			class MarkerUpdated {};
 			class milsim_serverEfficiency {};
 		};
-	};
-	class RangerMetrics_event {
-		class functions {
+		class client {
 			file = "\RangerMetrics\functions\capture\clientEH";
 		};
 	};

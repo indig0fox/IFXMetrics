@@ -2,11 +2,14 @@
 	["OnUserConnected", {
 		params ["_networkId", "_clientStateNumber", "_clientState"];
 		private _userInfo = (getUserInfo _networkId);
-		_userInfo call RangerMetrics_capture_fnc_player_identity;
-		_userInfo call RangerMetrics_capture_fnc_player_status;
-		["server_events", "OnUserConnected", [
-			["string", "playerUID", _userInfo#2]
-		], [
+		private _tags = [];
+		if (!isNil "_userInfo") then {
+			_tags pushBack ["string", "playerUID", _userInfo#2];
+			_userInfo call RangerMetrics_capture_fnc_player_identity;
+			_userInfo call RangerMetrics_capture_fnc_player_status;
+		};
+		["server_events", "OnUserConnected",
+		_tags, [
 			["string", "networkId", _networkId],
 			["int", "clientStateNumber", _clientStateNumber],
 			["string", "clientState", _clientState]

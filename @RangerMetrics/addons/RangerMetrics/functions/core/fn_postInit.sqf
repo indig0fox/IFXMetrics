@@ -28,6 +28,8 @@ addMissionEventHandler [
     RangerMetrics_callback_fnc_callbackHandler
 ];
 
+"RangerMetrics" callExtension ["setAddonDir", [configSourceMod (configFile >> "CfgPatches" >> "RangerMetrics")]];
+
 // Deinit to start fresh. See callback handler for the remainder of async init code
 "RangerMetrics" callExtension "deinitExtension";
 
