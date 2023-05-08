@@ -8,7 +8,7 @@ RangerMetrics_aceMedicalPresent = isClass(configFile >> "CfgPatches" >> "ace_med
 RangerMetrics_logPrefix = "RangerMetrics";
 RangerMetrics_debug = true;
 RangerMetrics_initialized = false;
-RangerMetrics_run = false;
+RangerMetrics_run = true;
 RangerMetrics_nextID = 0;
 RangerMetrics_messageQueue = createHashMap;
 // for debug, view messages in queue

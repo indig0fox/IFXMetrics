@@ -123,7 +123,7 @@ if (isServer) then {
 		nil,
 		[
 			["int", "players_connected", {
-				private _info = getUserInfo _x;
+				private _info = getUserInfo (getPlayerId _x);
 				if (!isNil "_info") then {
 					_info select 7
 				} else {false}
