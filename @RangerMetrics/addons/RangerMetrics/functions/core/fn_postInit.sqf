@@ -6,7 +6,7 @@ if (!isServer && hasInterface) exitWith {};
 RangerMetrics_cbaPresent = isClass(configFile >> "CfgPatches" >> "cba_main");
 RangerMetrics_aceMedicalPresent = isClass(configFile >> "CfgPatches" >> "ace_medical_status");
 RangerMetrics_logPrefix = "RangerMetrics";
-RangerMetrics_debug = true;
+RangerMetrics_debug = false;
 RangerMetrics_initialized = false;
 RangerMetrics_run = true;
 RangerMetrics_nextID = 0;

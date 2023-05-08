@@ -124,7 +124,7 @@ if (isServer) then {
 		[
 			["int", "players_connected", {
 				private _info = getUserInfo (getPlayerId _x);
-				if (!isNil "_info") then {
+				if (!isNil "_info" && {count _info >= 6}) then {
 					_info select 7
 				} else {false}
 			} count _allPlayers]
