@@ -20,4 +20,4 @@ private _settings = RangerMetrics_recordingSettings get "weather";
 		["float", "moonPhase", moonPhase date],
 		["float", "sunOrMoon", sunOrMoon]
 	]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

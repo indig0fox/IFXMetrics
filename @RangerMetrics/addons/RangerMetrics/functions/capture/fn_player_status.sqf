@@ -15,4 +15,4 @@ private _settings = RangerMetrics_recordingSettings get "playerStatus";
 		["string", "profileName", _profileName]
 	],
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

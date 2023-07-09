@@ -38,7 +38,7 @@ switch (_data select 0) do {
 				"Setting loaded: %1",
 				_data
 			],
-			"INFO"
+			"DEBUG"
 		] call RangerMetrics_fnc_log;
 
 	};
@@ -46,7 +46,7 @@ switch (_data select 0) do {
 	default {
 		[
 			_data select 0,
-			"INFO"
+			"DEBUG"
 		] call RangerMetrics_fnc_log;
 	};
 };

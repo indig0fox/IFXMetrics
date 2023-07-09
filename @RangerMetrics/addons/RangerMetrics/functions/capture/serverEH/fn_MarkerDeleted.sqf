@@ -28,4 +28,4 @@ if (_ownerUID isEqualTo "") then {
 		["string", "owner", _ownerUID]
 	],
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

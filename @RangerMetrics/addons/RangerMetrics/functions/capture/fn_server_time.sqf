@@ -12,4 +12,4 @@ private _settings = RangerMetrics_recordingSettings get "serverTime";
 		["float", "timeMultiplier", timeMultiplier toFixed 2],
 		["float", "accTime", accTime toFixed 2]
 	]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

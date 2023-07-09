@@ -10,4 +10,4 @@ private _settings = RangerMetrics_recordingSettings get "viewDistance";
 		["float", "objectViewDistance", getObjectViewDistance # 0],
 		["float", "viewDistance", viewDistance]
 	]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

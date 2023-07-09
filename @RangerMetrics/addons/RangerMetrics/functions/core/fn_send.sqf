@@ -1,66 +1,63 @@
-// send the data
+params [
+    ["_bucket", "default", [""]],
+    "_measurement",
+    ["_tags", [], [[], nil]],
+    ["_fields", [], [[], nil]],
+    ["_tagContext", ["profile", "server"], [[]]]
+];
 
-// duplicate the message queue so we can clear it before sending the data
-private "_extSend";
-// isNil {
-// 	_extSend = + RangerMetrics_messageQueue;
-// 	RangerMetrics_messageQueue = createHashMap;
-// };
 
+// format[
+//     "profile=%1,world=%2,%3",
+//     profileName,
+//     toLower worldName,
+//     (_tags apply {format['%1=%2', _x#0, _x#1]}) joinString ","
+// ],
 
-// debug
-if (
-	missionNamespace getVariable ["RangerMetrics_debug",false]
-) then {
-	["Sending a3influx data", "DEBUG"] call RangerMetrics_fnc_log;
+if (_tagContext find "profile" > -1) then {
+    _tags pushBack ["string", "profileName", profileName];
+};
+if (_tagContext find "world" > -1) then {
+    _tags pushBack ["string", "world", toLower worldName];
+};
+if (_tagContext find "server" > -1) then {
+    private _serverProfile = missionNamespace getVariable [
+            "RangerMetrics_serverProfileName",
+            ""
+    ];
+    if (_serverProfile isNotEqualTo "") then {
+        _tags pushBack [
+            "string",
+            "connectedServer",
+            _serverProfile
+        ];
+    };
 };
 
-{
-	// run in direct unscheduled call
-	// prevents race condition accessing hashmap
-	isNil {
-		private _bucket = _x;
-		private _batchSize = 2000;
+private _outTags = _tags apply {
+    [_x, "tag"] call RangerMetrics_fnc_toLineProtocol
+} select {!isNil "_x"};
+// having no tags is OK
 
-		// get the records for this bucket
-		private "_records";
-		private _records = RangerMetrics_messageQueue get _bucket;
+_outTags = _outTags joinString ",";
 
-		// send the data in chunks
-		private _processing = _records select [0, (count _records -1) min _batchSize];
 
-		RangerMetrics_messageQueue set [
-			_bucket,
-			(RangerMetrics_messageQueue get _bucket) - _processing
-		];
+private _outFields = _fields apply {
+    [_x, "field"] call RangerMetrics_fnc_toLineProtocol
+} select {!isNil "_x"};
+// having no fields will cause an error
+if (count _outFields isEqualTo 0) exitWith {};
 
-		// send the data
-		if (
-			missionNamespace getVariable ["RangerMetrics_debug",false]
-		) then {
-			[format ["Bucket: %1, RecordsCount: %2", _bucket, count _processing], "DEBUG"] call RangerMetrics_fnc_log;
+_outFields = _outFields joinString ",";
 
-			// get unique measurement IDs
-			private _measurements = [];
-			{
-				_thisMeasurement = _x splitString "," select 0;
-				_measurements pushBackUnique _thisMeasurement;
-			} forEach _processing;
+private _extSend = format [
+    "%1,%2 %3 %4",
+    _measurement, // metric name
+    _outTags,
+    _outFields,
+    call RangerMetrics_fnc_unixTimestamp
+];
 
-			// get counts of each measurement
-			private _measurementCounts = [];
-			{
-				private _measurement = _x;
-				_measurementCounts pushBack [
-					_measurement,
-					count (_measurements select {_x == _measurement})
-				];
-			} forEach _measurements;
+"RangerMetrics" callExtension ["sendToInflux", [_bucket, _extSend]];
 
-			[format ["Measurements: %1", _measurementCounts], "DEBUG"] call RangerMetrics_fnc_log;
-		};
-
-		"RangerMetrics" callExtension ["sendToInflux", flatten [_bucket, _processing]];
-	};
-
-} forEach (keys RangerMetrics_messageQueue);
+true;

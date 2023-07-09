@@ -20,6 +20,6 @@ private _settings = RangerMetrics_recordingSettings get "playerPerformance";
 			["float", "desync", _desync]
 		],
 		["server"]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 } forEach (allUsers apply {getUserInfo _x});
 

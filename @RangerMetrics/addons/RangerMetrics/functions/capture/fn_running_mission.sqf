@@ -25,4 +25,4 @@ private _settings = RangerMetrics_recordingSettings get "runningMission";
 
     ],
     ["profile", "server", "world"] // context
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

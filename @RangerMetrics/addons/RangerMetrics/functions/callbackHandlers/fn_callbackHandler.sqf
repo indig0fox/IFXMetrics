@@ -30,14 +30,6 @@ try {
 
 
 switch (_function) do {
-	case "deinitExtension": {
-		// Our first call is deinitExtension. When we received a single "true" value, we can then run init processes for the extension connections.
-		if ((_response select 0) isEqualTo true) then {
-			"RangerMetrics" callExtension "initExtension";
-		} else {
-			_response call RangerMetrics_fnc_log;
-		};
-	};
 	case "loadSettingsJSON": {
 		[_function, _response] call RangerMetrics_callback_fnc_loadSettings;
 	};

@@ -1,3 +1,5 @@
+if (!isServer) exitWith {};
+
 params [["_text","Log text invalid"], ["_logType","DEBUG"]];
 
 if (typeName _this != "ARRAY") exitWith {
@@ -19,24 +21,8 @@ private _textFormatted = format [
     "[%1] %2: %3",
     RangerMetrics_logPrefix,
     _logType,
-    _text];
+    _text
+];
 
-if(isServer) then {
-    diag_log text _textFormatted;
-    if(isMultiplayer) then {
-        _playerIds = [];
-        {
-            _player = _x;
-            _ownerId = owner _player;
-            if(_ownerId > 0) then {
-                if(getPlayerUID _player in ["76561198013533294"]) then {
-                    _playerIds pushBack _ownerId;
-                };
-            };
-        } foreach allPlayers;
-        
-        if(count _playerIds > 0) then {
-            [_textFormatted] remoteExec ["diag_log", _playerIds];
-        };
-    };
-};
+
+diag_log text _textFormatted;

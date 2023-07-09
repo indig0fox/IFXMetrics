@@ -27,4 +27,4 @@ if (_ownerUID isEqualTo "") exitWith {};
 		["string", "owner", _ownerUID]
 	],
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

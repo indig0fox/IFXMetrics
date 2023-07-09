@@ -16,5 +16,5 @@ private _markerData = _marker call BIS_fnc_markerToString;
 		["string", "marker", _markerData]
 	],
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;
 

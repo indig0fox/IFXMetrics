@@ -37,4 +37,4 @@ if (_playerUID isNotEqualTo "") then {
 	nil,
 	_fields,
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

@@ -17,6 +17,6 @@ if (_unitUID isEqualTo "") exitWith {false};
 		["float", "health", 1 - (damage _unit)],
 		["bool", "state", _unconscious]
 	]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;
 
 true;

@@ -70,11 +70,9 @@ class CfgFunctions {
 			class postInit { postInit = 1; };
 			class captureLoop {};
 			class log {};
-			class queue {};
 			class send {};
 			class sendClientPoll {};
 			class startServerPoll {};
-			class classHandlers {};
 			class initCapture {};
 		};
 		class helpers {

@@ -13,7 +13,7 @@
 			["string", "networkId", _networkId],
 			["int", "clientStateNumber", _clientStateNumber],
 			["string", "clientState", _clientState]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) OnUserConnected fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["OnUserDisconnected", {
@@ -30,7 +30,7 @@
 			["string", "networkId", _networkId],
 			["int", "clientStateNumber", _clientStateNumber],
 			["string", "clientState", _clientState]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) OnUserDisconnected fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["PlayerConnected", {
@@ -48,7 +48,7 @@
 			["bool", "jip", _jip],
 			["int", "owner", _owner],
 			["string", "idstr", _idstr]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) PlayerConnected fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["HandleDisconnect", {
@@ -64,7 +64,7 @@
 			["string", "id", _id toFixed 0],
 			["string", "uid", _uid],
 			["string", "name", _name]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) HandleDisconnect fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 		false;
 	}],
@@ -78,7 +78,7 @@
 			["string", "networkId", _networkId],
 			["int", "clientStateNumber", _clientStateNumber],
 			["string", "clientState", _clientState]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) OnUserClientStateChanged fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["OnUserAdminStateChanged", {
@@ -92,7 +92,7 @@
 			["string", "networkId", _networkId],
 			["bool", "loggedIn", _loggedIn],
 			["bool", "votedIn", _votedIn]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) OnUserAdminStateChanged fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["OnUserKicked", {
@@ -109,7 +109,7 @@
 			["string", "kickType", _kickType],
 			["string", "kickReason", _kickReason],
 			["string", "kickMessageIncReason", _kickMessageIncReason]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		[format ["(EventHandler) OnUserKicked fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["HandleChatMessage", {
@@ -124,7 +124,7 @@
 		["server_events", "MPEnded", nil, [
 			["string", "winner", _winner],
 			["string", "reason", _reason]
-		]] call RangerMetrics_fnc_queue;
+		]] call RangerMetrics_fnc_send;
 		call RangerMetrics_capture_fnc_running_mission;
 		[format ["(EventHandler) MPEnded fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
@@ -196,7 +196,7 @@
 	// 			["bool", "autoSupply", _autoSupply]
 	// 		],
 	// 		nil
-	// 	] call RangerMetrics_fnc_queue;
+	// 	] call RangerMetrics_fnc_send;
 	// 	[format["(EventHandler) Service fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	// }]
 ]

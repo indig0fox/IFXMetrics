@@ -51,7 +51,7 @@ if (_unitId isEqualTo -1) exitWith {false};
 	], 
 	_classItemCounts,
 	["server"] 
-] call RangerMetrics_fnc_queue; 
+] call RangerMetrics_fnc_send; 
  
 // prep displayName by fetching from configs 
 _displayItemCounts = [];
@@ -91,7 +91,7 @@ _displayItemCounts = [];
 	], 
 	_displayItemCounts, 
 	["server"] 
-] call RangerMetrics_fnc_queue; 
+] call RangerMetrics_fnc_send; 
 
 true; 
 
@@ -186,7 +186,7 @@ true;
 // 		],
 // 		_x,
 // 		["server"]
-// 	] call RangerMetrics_fnc_queue;
+// 	] call RangerMetrics_fnc_send;
 // } forEach [
 // 	_primaryWeapon,
 // 	_secondaryWeapon,

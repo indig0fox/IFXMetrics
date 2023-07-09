@@ -30,4 +30,4 @@ private _unitPlayerUID = _userInfo select 2;
 		["float", "damage", _damage]
 	],
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

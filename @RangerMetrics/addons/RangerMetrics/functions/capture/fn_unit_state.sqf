@@ -78,4 +78,4 @@ private _playerTraits = getAllUnitTraits _unit;
 	],
 	_fields,
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

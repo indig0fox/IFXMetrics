@@ -24,4 +24,4 @@ private _userInfo = getUserInfo _unitPlayerId;
 		["string", "vehicleClass", typeOf _vehicle]
 	],
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

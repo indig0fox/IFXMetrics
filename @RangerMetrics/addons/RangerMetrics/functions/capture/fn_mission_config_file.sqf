@@ -161,7 +161,7 @@ private _propertyValues = createHashMap;
 			["category", _measurementCategory]
 		],
 		_fieldsWithType
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 } forEach _propertyValues;
 
 

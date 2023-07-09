@@ -41,7 +41,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 				(_x isKindOf "WeaponHolderSimulated")
 			} count _vehicles]
 		]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 
 	// Number of local units
 	[
@@ -73,7 +73,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 				(_x isKindOf "WeaponHolderSimulated")
 			} count _vehicles]
 		]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 
 	// Number of global units - only track on server
 	if (isServer) then {
@@ -109,7 +109,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 					!alive _x
 				} count _allPlayers]
 			]
-		] call RangerMetrics_fnc_queue;
+		] call RangerMetrics_fnc_send;
 	};
 
 } forEach [east, west, independent, civilian];
@@ -129,5 +129,5 @@ if (isServer) then {
 				} else {false}
 			} count _allPlayers]
 		]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 };

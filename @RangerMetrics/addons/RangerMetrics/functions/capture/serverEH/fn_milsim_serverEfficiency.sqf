@@ -14,4 +14,4 @@ private _settings = RangerMetrics_recordingSettings get "CBAEventHandlers" get "
 	nil,
 	_fields,
 	["server"]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;

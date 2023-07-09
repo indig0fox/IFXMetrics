@@ -69,7 +69,7 @@ if (RangerMetrics_aceMedicalPresent) then {
 // 			["string", "projectile", _projectile]
 // 		],
 // 		["server"]
-// 	] call RangerMetrics_fnc_queue;
+// 	] call RangerMetrics_fnc_send;
 
 // 	[_unit] call RangerMetrics_capture_fnc_unit_state;
 // }];
@@ -103,7 +103,7 @@ _handle = _unit addEventHandler ["GetInMan", {
 			["string", "turret", _turret]
 		],
 		["server"]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 
 	[_unit] call RangerMetrics_capture_fnc_unit_state;
 }];
@@ -133,7 +133,7 @@ _handle = _unit addEventHandler ["GetOutMan", {
 			["string", "turret", _turret]
 		],
 		["server"]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 
 	[_unit] call RangerMetrics_capture_fnc_unit_state;
 }];
@@ -163,7 +163,7 @@ _handle = _unit addEventHandler ["HandleScore", {
 			["string", "object", [configOf _object] call BIS_fnc_displayName]
 		],
 		["server"]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 
 	nil;
 }];
@@ -192,7 +192,7 @@ _handle = _unit addEventHandler ["InventoryClosed", {
 			["string", "container", _container]
 		],
 		["server"]
-	] call RangerMetrics_fnc_queue;
+	] call RangerMetrics_fnc_send;
 
 	[_unit] call RangerMetrics_capture_fnc_unit_inventory;
 	nil;

@@ -17,4 +17,4 @@ private _settings = RangerMetrics_recordingSettings get "runningScripts";
 			} else {0}
 		]
 	]
-] call RangerMetrics_fnc_queue;
+] call RangerMetrics_fnc_send;
