@@ -6,7 +6,6 @@
     "org": "ORG_NAME"
   },
   "arma3": {
-    "refreshRateMs": 1000,
     "debug": false
   },
   "recordingSettings": {
@@ -32,7 +31,7 @@
       "name": "entityCount",
       "enabled": true,
       "serverOnly": false,
-      "intervalMs": 8000,
+      "intervalMs": 5000,
       "bucket": "server_performance",
       "measurement": "n/a",
       "description": "SERVER/HC POLL. Tracks the number of entities on the server. Polled on server (and HC) at specified interval as well as on EntityCreated/EntityRespawned/EntityKilled events. Measurement is static, [entities_local, entities_remote, entities_global]."
@@ -50,7 +49,7 @@
       "name": "serverTime",
       "enabled": true,
       "serverOnly": true,
-      "intervalMs": 10000,
+      "intervalMs": 2000,
       "bucket": "mission_data",
       "measurement": "server_time",
       "description": "SERVER POLL. Tracks the server time. Always server-only. Runs at specified interval."
@@ -59,7 +58,7 @@
       "name": "weather",
       "enabled": true,
       "serverOnly": true,
-      "intervalMs": 30000,
+      "intervalMs": 10000,
       "bucket": "mission_data",
       "measurement": "weather",
       "description": "SERVER POLL. Tracks the weather on the server. Always server-only. Runs at specified interval."
@@ -68,7 +67,7 @@
       "name": "viewDistance",
       "enabled": true,
       "serverOnly": true,
-      "intervalMs": 300000,
+      "intervalMs": 10000,
       "bucket": "mission_data",
       "measurement": "view_distance",
       "description": "SERVER POSTINIT, MPEnded. Tracks the view distance on the server. Always server-only. Runs at specified interval."
