@@ -30,6 +30,10 @@
 	[
 		"viewDistance",
 		RangerMetrics_capture_fnc_view_distance
+	],
+	[
+		"soldierAmmo",
+		RangerMetrics_capture_fnc_soldier_ammo
 	]
 	// [
 	// 	"playerInventory",

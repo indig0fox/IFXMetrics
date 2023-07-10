@@ -25,15 +25,15 @@
 	_x params ["_name", "_code"];
 
 	// get the settings
-	private _settings = RangerMetrics_recordingSettings get _name;
+	private _settings = RangerMetrics_recordingSettings getVariable _name;
 	if (isNil "_settings") exitWith {};
-	if (count (keys _settings) == 0) exitWith {};
+	if (count (allVariables _settings) == 0) exitWith {};
 
 	if (
-		(_settings get "enabled") isNotEqualTo true ||
+		(_settings getVariable "enabled") isNotEqualTo true ||
 		(
 			!isServer &&
-			(_settings get "serverOnly") isNotEqualTo false
+			(_settings getVariable "serverOnly") isNotEqualTo false
 		) ||
 		(hasInterface && !isServer)
 	) exitWith {};
@@ -49,15 +49,15 @@
     private "_handle";
 	_x params ["_settingName", "_handleName", "_code"];
 	
-		private _settings = RangerMetrics_recordingSettings get "CBAEventHandlers" get _settingName;
+		private _settings = (RangerMetrics_recordingSettings getVariable "CBAEventHandlers") getVariable _settingName;
 	if (isNil "_settings") exitWith {};
 	if (count (keys _settings) == 0) exitWith {};
 
 	if (
-		(_settings get "enabled") isNotEqualTo true ||
+		(_settings getVariable "enabled") isNotEqualTo true ||
 		(
 			!isServer &&
-			(_settings get "serverOnly") isNotEqualTo false
+			(_settings getVariable "serverOnly") isNotEqualTo false
 		) ||
 		(hasInterface && !isServer)
 	) exitWith {};

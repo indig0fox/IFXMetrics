@@ -2,16 +2,18 @@ params ["_function", "_data"];
 
 
 if (_function isEqualTo "loadSettingsJSON") exitWith {
-	RangerMetrics_settings = _data;
-	RangerMetrics_recordingSettings = _data get "recordingSettings";
+	diag_log "RangerMetrics: loadSettingsJSON";
+	// diag_log text format["%1", _data#0];
+	RangerMetrics_settings = [_data#0] call CBA_fnc_parseJSON;
+	// diag_log text format["%1", RangerMetrics_settings];
 
-	RangerMetrics_debug = RangerMetrics_settings get "arma3" get "debug";
+
+	RangerMetrics_recordingSettings = RangerMetrics_settings getVariable "recordingSettings";
+
+	RangerMetrics_debug = (RangerMetrics_settings getVariable "arma3") getVariable "debug";
 
 	[
-		format [
-			"Settings loaded: %1",
-			_data
-		],
+		"Settings loaded: %1",
 		"INFO"
 	] call RangerMetrics_fnc_log;
 

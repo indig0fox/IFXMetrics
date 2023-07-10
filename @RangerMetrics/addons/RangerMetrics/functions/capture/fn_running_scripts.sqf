@@ -1,10 +1,10 @@
 if (!RangerMetrics_run) exitWith {};
 
-private _settings = RangerMetrics_recordingSettings get "runningScripts";
+private _settings = RangerMetrics_recordingSettings getVariable "runningScripts";
 
 [
-	_settings get "bucket",
-	_settings get "measurement",
+	_settings getVariable "bucket",
+	_settings getVariable "measurement",
 	nil,
 	[
 		["int", "spawn", diag_activeScripts select 0],

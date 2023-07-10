@@ -4,10 +4,9 @@
 
 *.so
 
-extension/RangerMetrics.h
+RangerMetrics.h
+RangerMetrics_x64.h
 
-extension/RangerMetrics_x64.h
-
-\@RangerMetrics/settings.json
+settings.json
 
 *.log

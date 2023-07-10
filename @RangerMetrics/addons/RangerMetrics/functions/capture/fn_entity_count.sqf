@@ -1,6 +1,6 @@
 if (!RangerMetrics_run) exitWith {};
 
-private _settings = RangerMetrics_recordingSettings get "entityCount";
+private _settings = RangerMetrics_recordingSettings getVariable "entityCount";
 
 
 private _allUnits = allUnits;
@@ -13,7 +13,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 	private _thisSideStr = _thisSide call BIS_fnc_sideNameUnlocalized;
 	// Number of remote units
 	[
-		_settings get "bucket",
+		_settings getVariable "bucket",
 		"entities_remote",
 		[
 			["string", "side", _thisSideStr]
@@ -45,7 +45,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 
 	// Number of local units
 	[
-		_settings get "bucket",
+		_settings getVariable "bucket",
 		"entities_local",
 		[
 			["string", "side", _thisSideStr]
@@ -78,7 +78,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 	// Number of global units - only track on server
 	if (isServer) then {
 		[
-			_settings get "bucket",
+			_settings getVariable "bucket",
 			"entities_global",
 			[
 				["string", "side", _thisSideStr]
@@ -118,7 +118,7 @@ private _allPlayers = call BIS_fnc_listPlayers;
 
 if (isServer) then {
 	[
-		_settings get "bucket",
+		_settings getVariable "bucket",
 		"player_count",
 		nil,
 		[

@@ -59,7 +59,7 @@
       "name": "weather",
       "enabled": true,
       "serverOnly": true,
-      "intervalMs": 300000,
+      "intervalMs": 30000,
       "bucket": "mission_data",
       "measurement": "weather",
       "description": "SERVER POLL. Tracks the weather on the server. Always server-only. Runs at specified interval."
@@ -82,23 +82,14 @@
       "measurement": "running_mission",
       "description": "SERVER POSTINIT, MPEnded. Tracks the name of the mission running on the server. Always server-only. Runs at the start (and tries at end) of the mission."
     },
-    "playerStatus": {
-      "name": "playerStatus",
+    "soldierAmmo": {
+      "name": "soldierAmmo",
       "enabled": true,
       "serverOnly": true,
-      "intervalMs": 0,
-      "bucket": "player_data",
-      "measurement": "client_state",
-      "description": "EH. Tracks players' clientstateNumber, adminState, and profileName on connect/disconnect to server and to mission, as well as when these values change."
-    },
-    "playerIdentity": {
-      "name": "playerIdentity",
-      "enabled": true,
-      "serverOnly": true,
-      "intervalMs": 0,
-      "bucket": "player_data",
-      "measurement": "player_identity",
-      "description": "EH. Tracks players' identity on connect/disconnect to server and to mission, as well as when these values change."
+      "intervalMs": 10000,
+      "bucket": "soldier_ammo",
+      "measurement": "soldier_ammo",
+      "description": "SERVER POLL. Tracks the ammo count of all units by side. Polled on server at specified interval."
     },
     "CBAEventHandlers": {
       "milsimServerEfficiency": {

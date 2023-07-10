@@ -16,11 +16,7 @@ if (_data isEqualTo "") exitWith {
 private "_response";
 try {
 	// diag_log format ["Raw callback: %1: %2", _function, _data];
-	if (_function find "JSON" > -1) then {
-		_response = [_data, 2] call CBA_fnc_parseJSON;
-	} else {
-		_response = parseSimpleArray _data;
-	};
+	_response = parseSimpleArray _data;
 } catch {
 	[
 		format ["Callback invalid data: %1: %2", _function, _data],

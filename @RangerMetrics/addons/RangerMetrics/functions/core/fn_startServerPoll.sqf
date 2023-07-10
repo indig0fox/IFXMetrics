@@ -1,6 +1,6 @@
 params ["_refName", "_code"];
 
-private _intervalMs = RangerMetrics_recordingSettings get _refName get "intervalMs";
+private _intervalMs = (RangerMetrics_recordingSettings getVariable _refName) getVariable ["intervalMs", 1000];
 if (isNil "_intervalMs") exitWith {
     [format["No intervalMs found for serverPoll %1", _name]] call RangerMetrics_fnc_log;
 };

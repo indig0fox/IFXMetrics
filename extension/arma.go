@@ -9,7 +9,6 @@ package main
 import "C" // This is required to import the C code
 
 import (
-	"bytes"
 	"compress/gzip"
 	"encoding/json"
 	"errors"
@@ -74,7 +73,7 @@ var CBAEventHandlerProperties []string = []string{
 	"Description",
 }
 
-type settingsJson struct {
+type SettingsJson struct {
 	Influx struct {
 		Enabled bool   `json:"enabled"`
 		Host    string `json:"host"`
@@ -85,10 +84,10 @@ type settingsJson struct {
 		RefreshRateMs int  `json:"refreshRateMs"`
 		Debug         bool `json:"debug"`
 	} `json:"arma3"`
-	RecordingSettings map[string]interface{} `json:"recordingSettings"`
+	RecordingSettings map[string]ServerPollSetting `json:"recordingSettings"`
 }
 
-var activeSettings settingsJson
+var activeSettings SettingsJson
 
 // InfluxDB variables
 var InfluxClient influxdb2.Client
@@ -118,7 +117,7 @@ func init() {
 
 func deinitExtension() {
 	functionName := "deinitExtension"
-	writeLog(functionName, `Deinitializing RangerMetrics extension"`, "INFO")
+	writeLog(functionName, `Deinitializing RangerMetrics extension`, "INFO")
 
 	if InfluxClient != nil {
 		InfluxClient.Close()
@@ -161,21 +160,27 @@ func version() {
 // return db client and error
 func connectToInflux() (influxdb2.Client, error) {
 
+	loadSettings()
+
 	// create backup writer
 	if BACKUP_WRITER == nil {
-		writeLog("connectToInflux", `Creating backup file`, "INFO")
-		file, err := os.Open(BACKUP_FILE_PATH)
+		writeLog("connectToInflux", fmt.Sprintf(`Creating backup file: %s`, BACKUP_FILE_PATH), "INFO")
+		// create if not exists
+		file, err := os.OpenFile(BACKUP_FILE_PATH, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			writeLog("connectToInflux", `Error opening backup file`, "ERROR")
+			writeLog("connectToInflux", fmt.Sprintf(`Error opening backup file: %s`, err), "ERROR")
 		}
 		BACKUP_WRITER = gzip.NewWriter(file)
 		if err != nil {
-			writeLog("connectToInflux", `Error creating gzip writer`, "ERROR")
+			writeLog("connectToInflux", fmt.Sprintf(`Error creating gzip writer: %s`, err), "ERROR")
 		}
 	}
 
 	if activeSettings.Influx.Host == "" ||
-		activeSettings.Influx.Host == "http://host:8086" {
+		activeSettings.Influx.Host == "http://INFLUX_URL:8086" {
+
+		writeLog("connectToInflux", `Influx connection settings not configured. Using local backup`, "INFO")
+		writeLog("connectToInflux", fmt.Sprintf(`Influx connection settings: %v`, activeSettings), "DEBUG")
 
 		return nil, errors.New("influxConnectionSettings.Host is empty")
 		// writeLog("connectToInflux", `["Creating backup file", "INFO"]`)
@@ -192,8 +197,8 @@ func connectToInflux() (influxdb2.Client, error) {
 		// return "Error connecting to Influx. Using local backup"
 	}
 
-	if activeSettings.Influx.Enabled == false {
-		return nil, errors.New("influxConnectionSettings.Enabled is false")
+	if !activeSettings.Influx.Enabled {
+		return nil, errors.New("influxdb.Enabled is false")
 	}
 
 	InfluxClient := influxdb2.NewClientWithOptions(activeSettings.Influx.Host, activeSettings.Influx.Token, influxdb2.DefaultOptions().SetBatchSize(2500).SetFlushInterval(1000))
@@ -220,7 +225,8 @@ func writeToInflux(a3DataRaw *[]string) string {
 		InfluxClient, err = connectToInflux()
 		if err != nil {
 			InfluxClient = nil
-			return fmt.Sprintf(`Error connecting to InfluxDB: %v`, err)
+			// return fmt.Sprintf(`Error connecting to InfluxDB: %v`, err)
+			// we dont want to return, because we have the backup log being written as a fallback
 		}
 	}
 
@@ -301,14 +307,13 @@ func getDir() string {
 	return dir
 }
 
-// return true if the program should continue
-func loadSettings() (settingsJson, error) {
+func loadSettings() (SettingsJson, error) {
 	functionName := "loadSettings"
 	writeLog(functionName, fmt.Sprintf(`ADDON_FOLDER: %s`, ADDON_FOLDER), "DEBUG")
 	writeLog(functionName, fmt.Sprintf(`LOG_FILE: %s`, LOG_FILE), "DEBUG")
 	writeLog(functionName, fmt.Sprintf(`SETTINGS_FILE: %s`, SETTINGS_FILE), "DEBUG")
 
-	settings := settingsJson{}
+	settings := SettingsJson{}
 
 	// print the current working directory
 	var file *os.File
@@ -343,7 +348,7 @@ func loadSettings() (settingsJson, error) {
 		// file exists
 		writeLog(functionName, `settings.json found`, "DEBUG")
 		// read the file
-		file, err = os.Open(SETTINGS_FILE)
+		file, err = os.OpenFile(SETTINGS_FILE, os.O_RDONLY, 0644)
 		if err != nil {
 			return settings, err
 		}
@@ -361,16 +366,28 @@ func loadSettings() (settingsJson, error) {
 			return settings, err
 		}
 
-		// compact the json
-		var jsonStr bytes.Buffer
-		err = json.Compact(&jsonStr, fileContents)
+		// unmarshal the json to activeSettings
+		err = json.Unmarshal(fileContents, &activeSettings)
 		if err != nil {
+			writeLog(functionName, fmt.Sprintf(`Error unmarshalling settings json: %s`, err), "ERROR")
 			return settings, err
 		}
 
+		// marshal the json
+		var jsonStr []byte
+		jsonStr, err = json.Marshal(activeSettings)
+		if err != nil {
+			writeLog(functionName, fmt.Sprintf(`Error marshalling settings json: %s`, err), "ERROR")
+			return activeSettings, err
+		}
+
+		// convert to string
+		var jsonStrString string = string(jsonStr)
+
+		// send the contents to the log
 		writeLog(
 			"loadSettingsJSON",
-			jsonStr.String(),
+			jsonStrString,
 			"DEBUG",
 		)
 

@@ -5,8 +5,6 @@
 		private _tags = [];
 		if (!isNil "_userInfo") then {
 			_tags pushBack ["string", "playerUID", _userInfo#2];
-			_userInfo call RangerMetrics_capture_fnc_player_identity;
-			_userInfo call RangerMetrics_capture_fnc_player_status;
 		};
 		["server_events", "OnUserConnected",
 		_tags, [
@@ -22,8 +20,6 @@
 		private _tags = [];
 		if (!isNil "_userInfo") then {
 			_tags pushBack ["string", "playerUID", _userInfo#2];
-			_userInfo call RangerMetrics_capture_fnc_player_identity;
-			_userInfo call RangerMetrics_capture_fnc_player_status;
 		};
 		["server_events", "OnUserDisconnected",
 			_tags, [
@@ -54,10 +50,6 @@
 	["HandleDisconnect", {
 		params ["_unit", "_id", "_uid", "_name"];
 		private _userInfo = (getUserInfo (_id toFixed 0));
-		if (!isNil "_userInfo") then {
-			_userInfo call RangerMetrics_capture_fnc_player_identity;
-			_userInfo call RangerMetrics_capture_fnc_player_status;
-		};
 		["server_events", "HandleDisconnect", [
 			["string", "playerUID", _uid]
 		], [
@@ -71,7 +63,6 @@
 	["OnUserClientStateChanged", {
 		params ["_networkId", "_clientStateNumber", "_clientState"];
 		private _userInfo = (getUserInfo _networkId);
-		_userInfo call RangerMetrics_capture_fnc_player_status;
 		["server_events", "OnUserClientStateChanged", [
 			["string", "playerUID", _userInfo#2]
 		], [
@@ -85,7 +76,6 @@
 		params ["_networkId", "_loggedIn", "_votedIn"];
 		private _userInfo = (getUserInfo _networkId);
 		if (isNil "_userInfo") exitWith {};
-		_userInfo call RangerMetrics_capture_fnc_player_status;
 		["server_events", "OnUserAdminStateChanged", [
 			["string", "playerUID", _userInfo#2]
 		], [
@@ -99,8 +89,6 @@
 		params ["_networkId", "_kickTypeNumber", "_kickType", "_kickReason", "_kickMessageIncReason"];
 		private _userInfo = (getUserInfo _networkId);
 		if (isNil "_userInfo") exitWith {};
-		_userInfo call RangerMetrics_capture_fnc_player_identity;
-		_userInfo call RangerMetrics_capture_fnc_player_status;
 		["server_events", "OnUserKicked", [
 			["string", "playerUID", _userInfo#2]
 		], [
@@ -142,18 +130,14 @@
 		if (
 			!(_entity isKindOf "AllVehicles")
 		) exitWith {};
-		_this call RangerMetrics_event_fnc_EntityKilled;
 		call RangerMetrics_capture_fnc_entity_count;
-		// [_entity] call RangerMetrics_capture_fnc_unit_inventory;
-		// [_entity] call RangerMetrics_capture_fnc_unit_state;
 
 		[format["(EventHandler) EntityKilled fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["EntityRespawned", {
 		params ["_newEntity", "_oldEntity"];
 		call RangerMetrics_capture_fnc_entity_count;
-		// [_entity] call RangerMetrics_capture_fnc_unit_inventory;
-		// [_entity] call RangerMetrics_capture_fnc_unit_state;
+
 		[format["(EventHandler) EntityRespawned fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}],
 	["GroupCreated", {
@@ -166,37 +150,4 @@
 		call RangerMetrics_capture_fnc_entity_count;
 		[format["(EventHandler) GroupDeleted fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
 	}]
-	// ["MarkerCreated", {
-	// 	params ["_marker", "_channelNumber", "_owner", "_local"];
-	// 	if (markerType _marker isEqualTo "") exitWith {};
-	// 	_this call RangerMetrics_event_fnc_MarkerCreated;
-	// 	[format["(EventHandler) MarkerCreated fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	// }],
-	// ["MarkerDeleted", {
-	// 	params ["_marker", "_channelNumber", "_owner", "_local"];
-	// 	if (markerType _marker isEqualTo "") exitWith {};
-	// 	_this call RangerMetrics_event_fnc_MarkerDeleted;
-	// 	[format["(EventHandler) MarkerDeleted fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	// }],
-	// ["MarkerUpdated", {
-	// 	params ["_marker", "_local"];
-		// if (markerType _marker isEqualTo "") exitWith {};
-	// 	_this call RangerMetrics_event_fnc_MarkerUpdated;
-	// }],
-	// ["Service", {
-	// 	params ["_serviceVehicle", "_servicedVehicle", "_serviceType", "_needsService", "_autoSupply"];
-	// 	[
-	// 		"server_events",
-	// 		"Service",
-	// 		[
-	// 			["string", "serviceVehicle", typeOf _serviceVehicle],
-	// 			["string", "servicedVehicle", typeOf _servicedVehicle],
-	// 			["int", "serviceType", _serviceType],
-	// 			["bool", "needsService", _needsService],
-	// 			["bool", "autoSupply", _autoSupply]
-	// 		],
-	// 		nil
-	// 	] call RangerMetrics_fnc_send;
-	// 	[format["(EventHandler) Service fired: %1", _this], "DEBUG"] call RangerMetrics_fnc_log;
-	// }]
-]
+];

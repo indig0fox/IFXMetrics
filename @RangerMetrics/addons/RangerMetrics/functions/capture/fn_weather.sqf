@@ -1,10 +1,10 @@
 if (!RangerMetrics_run) exitWith {};
 
-private _settings = RangerMetrics_recordingSettings get "weather";
+private _settings = RangerMetrics_recordingSettings getVariable "weather";
 
 [
-	_settings get "bucket",
-	_settings get "measurement",
+	_settings getVariable "bucket",
+	_settings getVariable "measurement",
 	nil, // tags
 	[ // fields
 		["float", "fog", fog],

@@ -1,6 +1,6 @@
 if (!RangerMetrics_run) exitWith {};
 
-private _settings = RangerMetrics_recordingSettings get "playerPerformance";
+private _settings = RangerMetrics_recordingSettings getVariable "playerPerformance";
 
 {
 	_x params ["_playerID", "_ownerId", "_playerUID", "_profileName", "_displayName", "_steamName", "_clientState", "_isHC", "_adminState", "_networkInfo", "_unit"];
@@ -11,8 +11,8 @@ private _settings = RangerMetrics_recordingSettings get "playerPerformance";
 	};
 
 	[
-		_settings get "bucket",
-		_settings get "measurement", 
+		_settings getVariable "bucket",
+		_settings getVariable "measurement", 
 		[["string", "playerUID", _playerUID]], 
 		[
 			["float", "avgPing", _avgPing],

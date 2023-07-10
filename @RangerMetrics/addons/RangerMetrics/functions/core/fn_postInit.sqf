@@ -8,9 +8,9 @@ RangerMetrics = false call CBA_fnc_createNamespace;
 
 RangerMetrics_cbaPresent = isClass(configFile >> "CfgPatches" >> "cba_main");
 RangerMetrics_logPrefix = "RangerMetrics";
-RangerMetrics_debug = false;
+RangerMetrics_debug = true;
 RangerMetrics_initialized = false;
-RangerMetrics_run = true;
+RangerMetrics_run = false;
 
 RangerMetrics_settings = createHashMap;
 RangerMetrics_recordingSettings = createHashMap;

@@ -1,10 +1,10 @@
 if (!RangerMetrics_run) exitWith {};
 
-private _settings = RangerMetrics_recordingSettings get "serverTime";
+private _settings = RangerMetrics_recordingSettings getVariable "serverTime";
 
 [
-	_settings get "bucket",
-	_settings get "measurement",
+	_settings getVariable "bucket",
+	_settings getVariable "measurement",
 	nil,
 	[
 		["float", "diag_tickTime", diag_tickTime toFixed 2],
