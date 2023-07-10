@@ -1,6 +1,8 @@
 # RangerMetrics - Arma3 InfluxDB Metrics
 
-Ranger Metrics is used to submit information from the Arma3 Instance to the Influx Database. This uses the ArmaInflux Version complied to a DLL to communicate.
+This addon is designed to capture data from Arma3 and send it to InfluxDB. The extension is written in Golang and uses a non-blocking Write API to send data to InfluxDB.
+
+The data in Influx can be used to create dashboards in Grafana.
 
 ---
 
@@ -10,8 +12,6 @@ Ranger Metrics is used to submit information from the Arma3 Instance to the Infl
 
 Configure the options in settings.json.
 
-As of v0.0.2, metrics are captured on a recurring loop in the scheduled environment with a two second pause to allow time. Whether to use CBA Per Frame Handlers that run metric collection less often and in the unscheduled environment has yet to be decided on, as it does lead to longer intervals that are more difficult to graph precisely.
-
 ### InfluxDB
 
 InfluxDB is a time series database. It is used to store data points with a timestamp.
@@ -19,10 +19,10 @@ InfluxDB is a time series database. It is used to store data points with a times
 #### Required Buckets
 
 - mission_data
-- player_data
 - player_performance
-- server_events
 - server_performance
+- server_events
+- soldier_ammo
 
 ### Grafana
 
@@ -52,6 +52,6 @@ missionNamespace setVariable ["RangerMetrics_run", false, true];
 
 #### Reload Settings.json and recreate all capture loops
 
-To reload everything while in a game, run `"RangerMetrics" callExtension "deinitExtension";` in Global Exec. This will disconnect any database connections and reset state. Running it Global Exec will cause any client with the addon to run it, which includes Headless Clients.
+To reload everything while in a game, run `"RangerMetrics" callExtension "initExtension";` in Global Exec. This will disconnect any database connections and reset state. Running it Global Exec will cause any client with the addon to run it, which includes Headless Clients.
 
-When the extension is finished, it will notify Arma via a callback. The addon will then __automatically__ run `"RangerMetrics" callExtension "initExtension";` to reinitialize the extension, to include fetching the new settings, tearing down existing captures, and re-setting up captures with the new settings.
+When the extension is finished, it will notify Arma via a callback. The addon will then __automatically__ reinitialize the extension, to include fetching the new settings, tearing down existing captures, and re-setting up captures with the new settings.
