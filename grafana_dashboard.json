@@ -21,20 +21,120 @@
       }
     ]
   },
+  "description": "Pulls Arma 3 Server Information for the selected Server",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 9,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "VGSzBEEVk"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 0.1
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.2
+              },
+              {
+                "color": "red",
+                "value": 0.3
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.4
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "super-light-yellow",
+                "value": 0.6
+              },
+              {
+                "color": "super-light-green",
+                "value": 0.7
+              },
+              {
+                "color": "green",
+                "value": 0.8
+              },
+              {
+                "color": "dark-green",
+                "value": 0.9
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 69,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "rowHeight": 0.85,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "VGSzBEEVk"
+          },
+          "query": "from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"milsim_server_efficiency\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"milsim_cps\")\r\n  |> map(fn: (r) => ({ r with _field: \"CPS\" })) ",
+          "refId": "A"
+        }
+      ],
+      "title": "Mission Efficiency %  (CPS)",
+      "type": "status-history"
+    },
     {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 4
       },
       "id": 40,
       "panels": [],
@@ -73,7 +173,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 1
+        "y": 5
       },
       "id": 12,
       "options": {
@@ -90,7 +190,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
@@ -150,7 +250,7 @@
         "h": 10,
         "w": 7,
         "x": 4,
-        "y": 1
+        "y": 5
       },
       "id": 8,
       "interval": "10s",
@@ -166,7 +266,7 @@
         "showThresholdLabels": true,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
@@ -227,7 +327,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "area"
@@ -260,10 +360,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 10,
         "w": 13,
         "x": 11,
-        "y": 1
+        "y": 5
       },
       "id": 46,
       "interval": "10s",
@@ -275,7 +375,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -321,7 +421,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 4
+        "y": 8
       },
       "id": 38,
       "interval": "10s",
@@ -339,7 +439,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
@@ -386,6 +486,7 @@
         "type": "influxdb",
         "uid": "${Datasource}"
       },
+      "description": "Number of calculations per second.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -414,7 +515,7 @@
         "h": 4,
         "w": 2,
         "x": 0,
-        "y": 7
+        "y": 11
       },
       "id": 59,
       "interval": "20s",
@@ -432,7 +533,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
@@ -451,6 +552,7 @@
         "type": "influxdb",
         "uid": "${Datasource}"
       },
+      "description": "Efficiency the Arma 3 Scheduler.  ",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -471,7 +573,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -479,7 +582,7 @@
         "h": 4,
         "w": 2,
         "x": 2,
-        "y": 7
+        "y": 11
       },
       "id": 60,
       "interval": "20s",
@@ -497,7 +600,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
@@ -510,6 +613,105 @@
       ],
       "title": "Milsim CPS",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 11,
+        "x": 0,
+        "y": 15
+      },
+      "id": 33,
+      "interval": "5s",
+      "options": {
+        "calculate": true,
+        "calculation": {
+          "xBuckets": {
+            "mode": "count",
+            "value": "15"
+          },
+          "yBuckets": {
+            "mode": "size",
+            "value": ""
+          }
+        },
+        "cellGap": 3,
+        "cellValues": {
+          "unit": "none"
+        },
+        "color": {
+          "exponent": 0.5,
+          "fill": "orange",
+          "mode": "opacity",
+          "reverse": true,
+          "scale": "linear",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "light-yellow"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": false
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "show": true,
+          "yHistogram": true
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "min": 0,
+          "reverse": false
+        }
+      },
+      "pluginVersion": "9.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"server_performance\")\r\n|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n|> filter(fn: (r) => r[\"_measurement\"] == \"fps\")\r\n|> filter(fn: (r) => r[\"_field\"] == \"fps_avg\")\r\n|> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n|> yield(name: \"avg\")",
+          "refId": "fps_avg"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "hide": true,
+          "query": "from(bucket: \"server_performance\")\r\n|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n|> filter(fn: (r) => r[\"_measurement\"] == \"fps\")\r\n|> filter(fn: (r) => r[\"_field\"] == \"fps_min\")\r\n|> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n|> aggregateWindow(every: v.windowPeriod, fn: min, createEmpty: false)\r\n|> yield(name: \"min\")",
+          "refId": "fps_min"
+        }
+      ],
+      "title": "Server FPS History",
+      "type": "heatmap"
     },
     {
       "datasource": {
@@ -543,7 +745,7 @@
         "h": 5,
         "w": 13,
         "x": 11,
-        "y": 8
+        "y": 15
       },
       "id": 48,
       "interval": "5s",
@@ -583,72 +785,136 @@
       },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 36,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GUER"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WEST"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CIV"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EAST"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 5,
-        "w": 11,
+        "w": 10,
         "x": 0,
-        "y": 11
+        "y": 20
       },
-      "id": 33,
-      "interval": "5s",
+      "id": 57,
+      "interval": "10",
       "options": {
-        "calculate": true,
-        "calculation": {
-          "xBuckets": {
-            "mode": "count",
-            "value": "15"
-          },
-          "yBuckets": {
-            "mode": "size",
-            "value": ""
-          }
-        },
-        "cellGap": 3,
-        "cellValues": {
-          "unit": "none"
-        },
-        "color": {
-          "exponent": 0.5,
-          "fill": "orange",
-          "mode": "opacity",
-          "reverse": true,
-          "scale": "linear",
-          "scheme": "PRGn",
-          "steps": 128
-        },
-        "exemplars": {
-          "color": "light-yellow"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
         "legend": {
-          "show": false
-        },
-        "rowsFrame": {
-          "layout": "auto"
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "show": true,
-          "yHistogram": true
-        },
-        "yAxis": {
-          "axisPlacement": "right",
-          "min": 0,
-          "reverse": false
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "9.4.7",
@@ -658,21 +924,38 @@
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "query": "from(bucket: \"server_performance\")\r\n|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n|> filter(fn: (r) => r[\"_measurement\"] == \"fps\")\r\n|> filter(fn: (r) => r[\"_field\"] == \"fps_avg\")\r\n|> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n|> yield(name: \"avg\")",
-          "refId": "fps_avg"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
           "hide": false,
-          "query": "from(bucket: \"server_performance\")\r\n|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n|> filter(fn: (r) => r[\"_measurement\"] == \"fps\")\r\n|> filter(fn: (r) => r[\"_field\"] == \"fps_min\")\r\n|> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n|> aggregateWindow(every: v.windowPeriod, fn: min, createEmpty: false)\r\n|> yield(name: \"min\")",
-          "refId": "fps_min"
+          "query": "  from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_global\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"units_alive\")\r\n  |> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n  |> group(columns: [\"side\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  ",
+          "refId": "All Units Alive"
         }
       ],
-      "title": "Server FPS History",
-      "type": "heatmap"
+      "title": "[Global] Active Units",
+      "transformations": [
+        {
+          "disabled": true,
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "binary": {
+              "left": "Alive Units",
+              "operator": "-",
+              "reducer": "sum",
+              "right": "Alive Players"
+            },
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "CIV",
+                "EAST",
+                "GUER",
+                "WEST"
+              ],
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -748,15 +1031,15 @@
                     },
                     {
                       "color": "light-yellow",
-                      "value": 60
+                      "value": 200
                     },
                     {
                       "color": "semi-dark-orange",
-                      "value": 90
+                      "value": 300
                     },
                     {
                       "color": "red",
-                      "value": 100
+                      "value": 400
                     }
                   ]
                 }
@@ -784,15 +1067,15 @@
                     },
                     {
                       "color": "yellow",
-                      "value": 60
+                      "value": 80
                     },
                     {
                       "color": "orange",
-                      "value": 90
+                      "value": 95
                     },
                     {
                       "color": "red",
-                      "value": 100
+                      "value": 110
                     }
                   ]
                 }
@@ -877,7 +1160,7 @@
         "h": 5,
         "w": 13,
         "x": 11,
-        "y": 13
+        "y": 20
       },
       "id": 5,
       "interval": "10s",
@@ -896,7 +1179,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
@@ -1097,7 +1380,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 36,
+            "fillOpacity": 25,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
@@ -1140,36 +1423,6 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "GUER"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "WEST"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "blue",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "CIV"
             },
             "properties": [
@@ -1196,16 +1449,46 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GUER"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WEST"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 9,
+        "h": 6,
+        "w": 10,
         "x": 0,
-        "y": 16
+        "y": 25
       },
-      "id": 57,
+      "id": 65,
       "interval": "10s",
       "options": {
         "legend": {
@@ -1227,36 +1510,12 @@
             "uid": "${Datasource}"
           },
           "hide": false,
-          "query": "  from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_global\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"units_alive\")\r\n  |> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n  |> group(columns: [\"side\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  ",
-          "refId": "All Units Alive"
+          "query": "  from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_global\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"players_alive\")\r\n  |> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n  |> group(columns: [\"side\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  ",
+          "refId": "All Players Alive"
         }
       ],
-      "title": "[Global] Active Units",
-      "transformations": [
-        {
-          "disabled": true,
-          "id": "calculateField",
-          "options": {
-            "alias": "Total",
-            "binary": {
-              "left": "Alive Units",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Alive Players"
-            },
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "CIV",
-                "EAST",
-                "GUER",
-                "WEST"
-              ],
-              "reducer": "sum"
-            }
-          }
-        }
-      ],
+      "title": "[Global] Active Players",
+      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -1294,7 +1553,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1321,8 +1580,8 @@
       "gridPos": {
         "h": 6,
         "w": 6,
-        "x": 9,
-        "y": 18
+        "x": 10,
+        "y": 25
       },
       "id": 32,
       "interval": "10s",
@@ -1402,699 +1661,11 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "max": 750,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 9,
-        "x": 15,
-        "y": 18
-      },
-      "id": 63,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
-          "query": "from(bucket: \"player_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"network\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"avgPing\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> group(columns: [\"playerUID\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Player Ping",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 25,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "CIV"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "purple",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "EAST"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "GUER"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "WEST"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "blue",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 9,
-        "x": 0,
-        "y": 21
-      },
-      "id": 65,
-      "interval": "10s",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
-          "hide": false,
-          "query": "  from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_global\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"players_alive\")\r\n  |> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n  |> group(columns: [\"side\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  ",
-          "refId": "All Players Alive"
-        }
-      ],
-      "title": "[Global] Active Players",
-      "transformations": [],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 9,
-        "x": 15,
-        "y": 23
-      },
-      "id": 64,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
-          "query": "from(bucket: \"player_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"network\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"desync\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> group(columns: [\"playerUID\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Player Desync",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Number of Groups",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 25,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 9,
-        "y": 24
-      },
-      "id": 29,
-      "interval": "10s",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_local\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"groups_total\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: true)\r\n  |> keep(columns: [\"_time\", \"profileName\", \"_value\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: true)",
-          "refId": "Groups",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Groups by Profile",
-      "transformations": [],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "max": 12000,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 9,
-        "x": 15,
-        "y": 28
-      },
-      "id": 62,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
-          "query": "from(bucket: \"player_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"network\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"avgBandwidth\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> group(columns: [\"playerUID\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Player Bandwidth",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Number of Vehicles",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 25,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 9,
-        "y": 30
-      },
-      "id": 31,
-      "interval": "10s",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${Datasource}"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_local\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"vehicles_total\" or r[\"_field\"] == \"vehicles_weaponholder\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: true)\r\n  |> keep(columns: [\"_time\", \"profileName\", \"_value\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: true)",
-          "refId": "Vehicles",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Vehicles by Profile",
-      "transformations": [],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "align": "left",
-            "cellOptions": {
-              "type": "auto"
-            },
+            "align": "auto",
+            "displayMode": "auto",
             "inspect": false
           },
           "mappings": [],
@@ -2102,175 +1673,50 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "channel"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "0": {
-                        "color": "#808080",
-                        "index": 0,
-                        "text": "Global"
-                      },
-                      "1": {
-                        "color": "light-blue",
-                        "index": 1,
-                        "text": "Side"
-                      },
-                      "2": {
-                        "color": "dark-yellow",
-                        "index": 2,
-                        "text": "Command"
-                      },
-                      "3": {
-                        "color": "green",
-                        "index": 3,
-                        "text": "Group"
-                      },
-                      "4": {
-                        "color": "light-yellow",
-                        "index": 4,
-                        "text": "Vehicle"
-                      },
-                      "5": {
-                        "color": "#ffffff",
-                        "index": 5,
-                        "text": "Direct"
-                      },
-                      "16": {
-                        "color": "#808080",
-                        "index": 7,
-                        "text": "System"
-                      }
-                    },
-                    "type": "value"
-                  },
-                  {
-                    "options": {
-                      "from": 6,
-                      "result": {
-                        "color": "semi-dark-red",
-                        "index": 6,
-                        "text": "Custom"
-                      },
-                      "to": 15
-                    },
-                    "type": "range"
-                  }
-                ]
-              },
-              {
-                "id": "custom.width",
-                "value": 91
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "from"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 186
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "_time"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 168
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 15,
-        "x": 9,
-        "y": 36
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 25
       },
-      "id": 14,
+      "id": 67,
       "options": {
         "footer": {
           "countRows": false,
-          "fields": [
-            "_value"
-          ],
+          "fields": "",
           "reducer": [
-            "lastNotNull"
+            "sum"
           ],
           "show": false
         },
-        "frameIndex": 0,
-        "showHeader": true,
-        "sortBy": []
+        "frameIndex": 1,
+        "showHeader": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.1.2",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "query": "from(bucket: \"server_events\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"HandleChatMessage\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> filter(fn: (r) => r._field == \"text\" or r._field == \"from\" or r._field == \"channel\")\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> keep(columns: [\"_time\", \"channel\", \"from\", \"name\", \"text\"])\r\n\r\n  ",
+          "query": "from(bucket: \"server_events\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"PlayerConnected\" or r[\"_measurement\"] == \"PlayerDisconnected\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"name\")\r\n  |> filter(fn: (r) => r[\"profileName\"] == \"${Server}\")\r\n  |> keep(columns: [\"_time\", \"_measurement\", \"_value\", \"_name\"])\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
-      "title": "Chat Log",
-      "transformations": [
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "_time"
-              }
-            ]
-          }
-        }
-      ],
+      "title": "Joins and Leaves",
       "type": "table"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 44
-      },
-      "id": 6,
-      "panels": [],
-      "title": "Global Entity Counts",
-      "type": "row"
     },
     {
       "datasource": {
@@ -2318,7 +1764,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -2463,9 +1910,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 9,
+        "w": 10,
         "x": 0,
-        "y": 45
+        "y": 31
       },
       "id": 9,
       "interval": "10s",
@@ -2479,7 +1926,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -2498,6 +1945,307 @@
       "title": "Global Alive Units By Side",
       "transformations": [],
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Number of Groups",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 10,
+        "y": 31
+      },
+      "id": 29,
+      "interval": "10s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.4.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_local\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"groups_total\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: true)\r\n  |> keep(columns: [\"_time\", \"profileName\", \"_value\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: true)",
+          "refId": "Groups",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Groups by Profile",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "channel"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#808080",
+                        "index": 0,
+                        "text": "Global"
+                      },
+                      "1": {
+                        "color": "light-blue",
+                        "index": 1,
+                        "text": "Side"
+                      },
+                      "2": {
+                        "color": "dark-yellow",
+                        "index": 2,
+                        "text": "Command"
+                      },
+                      "3": {
+                        "color": "green",
+                        "index": 3,
+                        "text": "Group"
+                      },
+                      "4": {
+                        "color": "light-yellow",
+                        "index": 4,
+                        "text": "Vehicle"
+                      },
+                      "5": {
+                        "color": "#ffffff",
+                        "index": 5,
+                        "text": "Direct"
+                      },
+                      "16": {
+                        "color": "#808080",
+                        "index": 7,
+                        "text": "System"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "from": 6,
+                      "result": {
+                        "color": "semi-dark-red",
+                        "index": 6,
+                        "text": "Custom"
+                      },
+                      "to": 15
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 91
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "gradient-gauge"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "from"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 186
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 190
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 35
+      },
+      "id": 14,
+      "options": {
+        "footer": {
+          "countRows": false,
+          "fields": [
+            "_value"
+          ],
+          "reducer": [
+            "lastNotNull"
+          ],
+          "show": false
+        },
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "query": "from(bucket: \"server_events\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"HandleChatMessage\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> filter(fn: (r) => r._field == \"text\" or r._field == \"from\" or r._field == \"channel\")\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> keep(columns: [\"_time\", \"channel\", \"from\", \"name\", \"text\"])\r\n\r\n  ",
+          "refId": "A"
+        }
+      ],
+      "title": "Chat Log",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "_time"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -2545,7 +2293,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -2750,9 +2499,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 9,
+        "w": 10,
         "x": 0,
-        "y": 51
+        "y": 37
       },
       "id": 44,
       "interval": "10s",
@@ -2766,7 +2515,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -2797,352 +2546,772 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Number of Vehicles",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 10,
+        "y": 37
+      },
+      "id": 31,
+      "interval": "10s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.4.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "from(bucket: \"server_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"entities_local\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"vehicles_total\" or r[\"_field\"] == \"vehicles_weaponholder\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: true)\r\n  |> keep(columns: [\"_time\", \"profileName\", \"_value\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: true)",
+          "refId": "Vehicles",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Vehicles by Profile",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 450,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 42
+      },
+      "id": 63,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "query": "from(bucket: \"player_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"network\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"avgPing\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> group(columns: [\"playerUID\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Player Ping",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 12000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 43
+      },
+      "id": 62,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "query": "from(bucket: \"player_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"network\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"avgBandwidth\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> group(columns: [\"playerUID\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Player Bandwidth",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${Datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 43
+      },
+      "id": 64,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${Datasource}"
+          },
+          "query": "from(bucket: \"player_performance\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"network\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"desync\")\r\n  |> filter(fn: (r) => r[\"connectedServer\"] == \"${Server}\")\r\n  |> group(columns: [\"playerUID\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Player Desync",
+      "type": "timeseries"
+    },
+    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 53
       },
-      "id": 54,
+      "id": 6,
       "panels": [],
-      "title": "Row title",
+      "title": "Global Entity Counts",
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": []
-      },
+      "collapsed": true,
       "gridPos": {
-        "h": 12,
-        "w": 6,
+        "h": 1,
+        "w": 24,
         "x": 0,
-        "y": 58
+        "y": 54
       },
-      "id": 50,
-      "options": {
-        "displayLabels": [
-          "percent",
-          "name",
-          "value"
-        ],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false,
-          "values": []
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
+      "id": 54,
+      "panels": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"primaryWeaponClass\")\r\n  |> duplicate(column: \"_value\", as: \"primaryWeaponClass\")\r\n  |> group(columns: [\"playerUID\", \"primaryWeaponClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"primaryWeaponClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"primaryWeaponClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Primary Weapons Equipped",
-      "type": "piechart"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 12,
+            "w": 6,
+            "x": 0,
+            "y": 49
+          },
+          "id": 50,
+          "options": {
+            "displayLabels": [
+              "percent",
+              "name",
+              "value"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false,
+              "values": []
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 6,
-        "x": 6,
-        "y": 58
-      },
-      "id": 51,
-      "options": {
-        "displayLabels": [
-          "percent",
-          "name",
-          "value"
-        ],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false,
-          "values": []
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "pluginVersion": "9.4.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${Datasource}"
+              },
+              "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"primaryWeaponClass\")\r\n  |> duplicate(column: \"_value\", as: \"primaryWeaponClass\")\r\n  |> group(columns: [\"playerUID\", \"primaryWeaponClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"primaryWeaponClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"primaryWeaponClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
+              "refId": "A"
+            }
           ],
-          "fields": "",
-          "values": true
+          "title": "Primary Weapons Equipped",
+          "type": "piechart"
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"currentWeaponClass\")\r\n  |> duplicate(column: \"_value\", as: \"currentWeaponClass\")\r\n  |> group(columns: [\"playerUID\", \"currentWeaponClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"currentWeaponClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"currentWeaponClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Current Weapons Equipped",
-      "type": "piechart"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 12,
+            "w": 6,
+            "x": 6,
+            "y": 49
+          },
+          "id": 51,
+          "options": {
+            "displayLabels": [
+              "percent",
+              "name",
+              "value"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false,
+              "values": []
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 6,
-        "x": 12,
-        "y": 58
-      },
-      "id": 55,
-      "options": {
-        "displayLabels": [
-          "percent",
-          "name",
-          "value"
-        ],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false,
-          "values": []
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "pluginVersion": "9.4.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${Datasource}"
+              },
+              "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"currentWeaponClass\")\r\n  |> duplicate(column: \"_value\", as: \"currentWeaponClass\")\r\n  |> group(columns: [\"playerUID\", \"currentWeaponClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"currentWeaponClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"currentWeaponClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
+              "refId": "A"
+            }
           ],
-          "fields": "",
-          "values": true
+          "title": "Current Weapons Equipped",
+          "type": "piechart"
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"handgunWeaponClass\")\r\n  |> duplicate(column: \"_value\", as: \"handgunWeaponClass\")\r\n  |> group(columns: [\"playerUID\", \"handgunWeaponClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"handgunWeaponClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"handgunWeaponClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Handgun Weapons Equipped",
-      "type": "piechart"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 12,
+            "w": 6,
+            "x": 12,
+            "y": 49
+          },
+          "id": 55,
+          "options": {
+            "displayLabels": [
+              "percent",
+              "name",
+              "value"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false,
+              "values": []
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 70
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "pluginVersion": "9.4.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${Datasource}"
+              },
+              "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"handgunWeaponClass\")\r\n  |> duplicate(column: \"_value\", as: \"handgunWeaponClass\")\r\n  |> group(columns: [\"playerUID\", \"handgunWeaponClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"handgunWeaponClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"handgunWeaponClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
+              "refId": "A"
+            }
           ],
-          "fields": "",
-          "values": false
+          "title": "Handgun Weapons Equipped",
+          "type": "piechart"
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "hide": false,
-          "query": "from(bucket: \"recording-data\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unitState\")\r\n  |> filter(fn: (r) => r[\"side\"] == \"EAST\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"isAlive\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
-          "refId": "A"
-        }
-      ],
-      "title": "Panel Title",
-      "transparent": true,
-      "type": "piechart"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${Datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 61
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 6,
-        "x": 15,
-        "y": 70
-      },
-      "id": 52,
-      "options": {
-        "displayLabels": [
-          "percent",
-          "name",
-          "value"
-        ],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false,
-          "values": []
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${Datasource}"
+              },
+              "hide": false,
+              "query": "from(bucket: \"recording-data\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unitState\")\r\n  |> filter(fn: (r) => r[\"side\"] == \"EAST\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"isAlive\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+              "refId": "A"
+            }
           ],
-          "fields": "",
-          "values": true
+          "title": "Panel Title",
+          "transparent": true,
+          "type": "piechart"
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${Datasource}"
           },
-          "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gogglesClass\")\r\n  |> duplicate(column: \"_value\", as: \"gogglesClass\")\r\n  |> group(columns: [\"playerUID\", \"gogglesClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"gogglesClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"gogglesClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
-          "refId": "A"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 6,
+            "x": 15,
+            "y": 61
+          },
+          "id": 52,
+          "options": {
+            "displayLabels": [
+              "percent",
+              "name",
+              "value"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false,
+              "values": []
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "9.4.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${Datasource}"
+              },
+              "query": "from(bucket: \"player_state\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"unit_loadout\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gogglesClass\")\r\n  |> duplicate(column: \"_value\", as: \"gogglesClass\")\r\n  |> group(columns: [\"playerUID\", \"gogglesClass\"])\r\n  |> last()\r\n  |> duplicate(column: \"playerUID\", as: \"countPlayers\")\r\n  |> group(columns: [\"gogglesClass\"])\r\n  |> count(column: \"countPlayers\")\r\n  |> group()\r\n  // new field\r\n  |> map (fn: (r) => ({ r with \"columnName\": \"Unit Count\" }))\r\n  |> pivot(rowKey:[\"gogglesClass\"], columnKey: [\"columnName\"], valueColumn: \"countPlayers\")\r\n  |> sort(columns: [\"_value\"], desc: true)\r\n\r\n\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Current Weapons Equipped",
+          "type": "piechart"
         }
       ],
-      "title": "Current Weapons Equipped",
-      "type": "piechart"
+      "title": "Row title",
+      "type": "row"
     }
   ],
   "refresh": false,
   "revision": 1,
-  "schemaVersion": 38,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -3150,12 +3319,12 @@
       {
         "current": {
           "selected": false,
-          "text": "IndigoFox",
-          "value": "IndigoFox"
+          "text": "17th_operations",
+          "value": "17th_operations"
         },
         "datasource": {
           "type": "influxdb",
-          "uid": "sOe5m_YVk"
+          "uid": "VGSzBEEVk"
         },
         "definition": "import \"influxdata/influxdb/schema\"\r\n\r\nschema.tagValues(bucket: \"server_performance\", tag: \"connectedServer\")",
         "hide": 0,
@@ -3172,7 +3341,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "CIV",
             "EAST",
@@ -3188,7 +3357,7 @@
         },
         "datasource": {
           "type": "influxdb",
-          "uid": "sOe5m_YVk"
+          "uid": "VGSzBEEVk"
         },
         "definition": "import \"influxdata/influxdb/schema\"\r\n\r\nschema.tagValues(bucket: \"server_performance\", tag: \"side\")",
         "hide": 0,
@@ -3205,11 +3374,13 @@
         "type": "query"
       },
       {
+        "allValue": "Ra",
         "current": {
-          "selected": false,
-          "text": "IndigoInflux",
-          "value": "IndigoInflux"
+          "selected": true,
+          "text": "RangerMetrics2023",
+          "value": "RangerMetrics2023"
         },
+        "description": "The Data source for the Graph Stats to come from.",
         "hide": 0,
         "includeAll": false,
         "multi": false,
@@ -3225,13 +3396,13 @@
     ]
   },
   "time": {
-    "from": "2023-04-18T23:53:01.534Z",
-    "to": "2023-04-19T00:10:01.159Z"
+    "from": "2023-07-09T00:13:31.127Z",
+    "to": "2023-07-09T03:41:46.023Z"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Arma 3 Server",
-  "uid": "c8WRiufVz",
-  "version": 65,
+  "title": "Official Ranger Metrics",
+  "uid": "c8WRiufV3",
+  "version": 35,
   "weekStart": ""
 }
