@@ -1,0 +1,22 @@
+{
+  "influxdb": {
+    "enabled": true,
+    "host": "http://INFLUX_URL:8086",
+    "token": "XXXXXXXXXXXXXXXXXXXXXXXXXXXX_AUTH_TOKEN_XXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "org": "ORG_NAME"
+  },
+  "arma3": {
+    "refreshRateMs": 2000,
+    "debug": false,
+    "traceLogToFile": false
+  },
+  "cbaEventHandlers": {
+    "milsimServerEfficiency": {
+      "eventName": "milsimServerEfficiency",
+      "description": "EVENTHANDLER. Tracks the efficiency of the server.",
+      "enabled": true,
+      "bucket": "server_performance",
+      "measurement": "milsim_server_efficiency"
+    }
+  }
+}
