@@ -29,7 +29,7 @@ In the below example, the `milsimServerEfficiency` event handler will send data 
 // ...
   "cbaEventHandlers": {
     "milsimServerEfficiency": {
-      "name": "milsimServerEfficiency",
+      "eventName": "milsimServerEfficiency",
       "description": "EVENTHANDLER. Tracks the efficiency of the server.",
       "enabled": true,
       "bucket": "server_performance",
