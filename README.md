@@ -111,12 +111,12 @@ Set an environment variable in your terminal with the desired extension build ve
 
 ```powershell
 # powershell
-$IFXMETRICS_BUILD_VER = "0.1.0-$(Get-Date -Format 'yyyyMMdd')-$(git rev-parse --short HEAD)"
+$IFXMETRICS_BUILD_VER = "2.0.0-$(Get-Date -Format 'yyyyMMdd')-$(git rev-parse --short HEAD)"
 ```
 
 ```bash
 # bash
-export IFXMETRICS_BUILD_VER="0.1.0-$(date -u '+%Y%m%d')-$(git rev-parse --short HEAD)"
+export IFXMETRICS_BUILD_VER="2.0.0-$(date -u '+%Y%m%d')-$(git rev-parse --short HEAD)"
 ```
 
 ### EXTENSION: COMPILING FOR WINDOWS
@@ -127,13 +127,13 @@ Run this from the project root.
 docker pull x1unix/go-mingw:1.20
 
 # Compile x64 Windows DLL
-docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20  go build -o ./ifxmetrics_x64.dll -buildmode=c-shared -ldflags "-w -s main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20  go build -o ./ifxmetrics_x64.dll -buildmode=c-shared -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/cmd
 
 # Compile x86 Windows DLL
-docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=386 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics.dll -buildmode=c-shared -ldflags "-w -s main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=386 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics.dll -buildmode=c-shared -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/cmd
 
 # Compile x64 Windows EXE
-docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics_x64.exe -ldflags "-w -s main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics_x64.exe -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/cmd
 ```
 
 ### EXTENSION: COMPILING FOR LINUX
@@ -144,10 +144,10 @@ Run this from the project root.
 docker build -t indifox926/build-a3go:linux-so -f ./build/Dockerfile.build .
 
 # Compile x64 Linux .so
-docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=amd64 -e CGO_ENABLED=1 -e CC=gcc indifox926/build-a3go:linux-so go build -o ./ifxmetrics_x64.so -linkshared -ldflags "-w -s main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=amd64 -e CGO_ENABLED=1 -e CC=gcc indifox926/build-a3go:linux-so go build -o ./ifxmetrics_x64.so -linkshared -ldflags "-w -s -X main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
 
 # Compile x86 Linux .so
-docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=386 -e CGO_ENABLED=1 -e CC=gcc indifox926/build-a3go:linux-so go build -o ./ifxmetrics.so -linkshared -ldflags "-w -s main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=386 -e CGO_ENABLED=1 -e CC=gcc indifox926/build-a3go:linux-so go build -o ./ifxmetrics.so -linkshared -ldflags "-w -s -X main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
 ```
 
 ### ADDON: COMPILE USING HEMTT
