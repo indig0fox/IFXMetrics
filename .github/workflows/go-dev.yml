@@ -10,11 +10,11 @@ on:
     branches: ["develop"]
 
 jobs:
-  build:
+  BuildWin64:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: BuildWin64
+      - name: build
         uses: addnab/docker-run-action@v3
         with:
           image: x1unix/go-mingw:1.20
@@ -23,7 +23,10 @@ jobs:
           run: |
             go build -o ./ifxmetrics_x64.dll -buildmode=c-shared -buildvcs=false -ldflags "-w -s -X main.EXTENSION_VERSION=${{github.ref_name}}-${{github.sha}}" ./extension/cmd
 
-      - name: BuildWin32
+  BuildWin32:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build
         uses: addnab/docker-run-action@v3
         with:
           image: x1unix/go-mingw:1.20
