@@ -9,7 +9,7 @@ git_hash=6                                # Default: 8
 
 [files]
 include=[
-  "ifxmetrics.config.json",
+  "ifxmetrics.config.example.json",
   "LICENSE",
   "README.md",
   "mod.cpp",

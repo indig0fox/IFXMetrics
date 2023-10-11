@@ -1,5 +1,7 @@
 #include "script_component.hpp"
 
+params ["_allUserInfos", [], [[]]];
+
 private _hashesOut = [];
 
 private _allUnits = allUnits;
@@ -10,18 +12,20 @@ private _allPlayers = call BIS_fnc_listPlayers;
 {
 	private _thisSide = _x;
 	private _thisSideStr = _thisSide call BIS_fnc_sideNameUnlocalized;
+	private _tags = +GVARMAIN(standardTags);
+	_tags pushBack ["side", _thisSideStr];
 	// Number of remote units
 	_hashesOut pushBack ([
 		["bucket", "server_performance"],
 		["measurement", "entities_remote"],
-		["tags", GVARMAIN(standardTags)],
+		["tags", _tags],
 		["fields", [
 			["units_alive", {
-				side _x isEqualTo _thisSide &&
+				side group _x isEqualTo _thisSide &&
 				not (local _x)
 			} count _allUnits],
 			["units_dead", {
-				side _x isEqualTo _thisSide &&
+				side group _x isEqualTo _thisSide &&
 				not (local _x)
 			} count _allDeadMen],
 			["groups_total", {
@@ -45,14 +49,14 @@ private _allPlayers = call BIS_fnc_listPlayers;
 	_hashesOut pushBack ([
 		["bucket", "server_performance"],
 		["measurement", "entities_local"],
-		["tags", GVARMAIN(standardTags)],
+		["tags", _tags],
 		["fields", [
 			["units_alive", {
-				side _x isEqualTo _thisSide &&
+				side group _x isEqualTo _thisSide &&
 				local _x
 			} count _allUnits],
 			["units_dead", {
-				side _x isEqualTo _thisSide &&
+				side group _x isEqualTo _thisSide &&
 				local _x
 			} count _allDeadMen],
 			["groups_total", {
@@ -78,13 +82,13 @@ private _allPlayers = call BIS_fnc_listPlayers;
 		_hashesOut pushBack ([
 			["bucket", "server_performance"],
 			["measurement", "entities_global"],
-			["tags", GVARMAIN(standardTags)],
+			["tags", _tags],
 			["fields", [
 				["units_alive", {
-					side _x isEqualTo _thisSide
+					side group _x isEqualTo _thisSide
 				} count _allUnits],
 				["units_dead", {
-					side _x isEqualTo _thisSide
+					side group _x isEqualTo _thisSide
 				} count _allDeadMen],
 				["groups_total", {
 					side _x isEqualTo _thisSide
@@ -98,11 +102,11 @@ private _allPlayers = call BIS_fnc_listPlayers;
 					(_x isKindOf "WeaponHolderSimulated")
 				} count _vehicles],
 				["players_alive", {
-					side _x isEqualTo _thisSide &&
+					side group _x isEqualTo _thisSide &&
 					alive _x
 				} count _allPlayers],
 				["players_dead", {
-					side _x isEqualTo _thisSide &&
+					side group _x isEqualTo _thisSide &&
 					!alive _x
 				} count _allPlayers]
 			]]
@@ -116,12 +120,8 @@ if (isServer) then {
 		["measurement", "player_count"],
 		["tags", GVARMAIN(standardTags)],
 		["fields", [
-			["players_connected", {
-				private _info = getUserInfo (getPlayerId _x);
-				if (!isNil "_info" && {count _info >= 6}) then {
-					_info select 7
-				} else {false}
-			} count _allPlayers]
+			["players_connected", count (_allUserInfos select {_x#7 isEqualTo false})],
+			["headless_clients_connected", count (_allUserInfos select {_x#7 isEqualTo true})]
 		]]
 	]);
 };

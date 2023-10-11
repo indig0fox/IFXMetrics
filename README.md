@@ -105,6 +105,58 @@ Grafana is a dashboarding tool. It is used to display the data from InfluxDB. A 
 
 ---
 
+## CORE METRICS
+
+These metrics will be gathered by default every `refreshRateMs` milliseconds.
+
+| Bucket | Measurement | Tags | Field |
+| --- | --- | --- | --- |
+| server_performance | fps | profile=`profileName` world=`worldName` server=`serverName` | fps_avg=`diag_fps` |
+| server_performance | fps | ... | fps_min=`diag_fpsMin` |
+| server_performance | running_scripts | ... | spawn=`diag_activeScripts#0` |
+| server_performance | running_scripts | ... | execVM=`diag_activeScripts#1` |
+| server_performance | running_scripts | ... | exec=`diag_activeScripts#2` |
+| server_performance | running_scripts | ... | execFSM=`diag_activeScripts#3` |
+| server_performance | running_scripts | ... | pfh=`count CBA_common_perFrameHandlerArray \|\| 0` |
+| server_performance | entities_remote | ... + side=`WEST`,`EAST`, etc | units_alive=`{side group _x isEqualTo _thisSide && not (local _x)} count _allUnits` |
+| server_performance | entities_remote | ... + side=`WEST`,`EAST`, etc | units_dead=`{side group _x isEqualTo _thisSide && not (local _x)} count _allDeadMen` |
+| server_performance | entities_remote | ... + side=`WEST`,`EAST`, etc | groups_total=`{side _x isEqualTo _thisSide && not (local _x)} count _allGroups` |
+| server_performance | entities_remote | ... + side=`WEST`,`EAST`, etc | vehicles_total=`{side _x isEqualTo _thisSide && not (local _x) && !(_x isKindOf "WeaponHolderSimulated")} count _vehicles` |
+| server_performance | entities_remote | ... + side=`WEST`,`EAST`, etc | vehicles_weaponholder=`{side _x isEqualTo _thisSide && not (local _x) && (_x isKindOf "WeaponHolderSimulated")} count _vehicles` |
+| server_performance | entities_local | ... + side=`WEST`,`EAST`, etc | units_alive=`{side group _x isEqualTo _thisSide && (local _x)} count _allUnits` |
+| server_performance | entities_local | ... + side=`WEST`,`EAST`, etc | units_dead=`{side group _x isEqualTo _thisSide && (local _x)} count _allDeadMen` |
+| server_performance | entities_local | ... + side=`WEST`,`EAST`, etc | groups_total=`{side _x isEqualTo _thisSide && (local _x)} count _allGroups` |
+| server_performance | entities_local | ... + side=`WEST`,`EAST`, etc | vehicles_total=`{side _x isEqualTo _thisSide && (local _x) && !(_x isKindOf "WeaponHolderSimulated")} count _vehicles` |
+| server_performance | entities_local | ... + side=`WEST`,`EAST`, etc | vehicles_weaponholder=`{side _x isEqualTo _thisSide && (local _x) && (_x isKindOf "WeaponHolderSimulated")} count _vehicles` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | units_alive=`{side group _x isEqualTo _thisSide} count _allUnits` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | units_dead=`{side group _x isEqualTo _thisSide} count _allDeadMen` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | groups_total=`{side _x isEqualTo _thisSide} count _allGroups` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | vehicles_total=`{side _x isEqualTo _thisSide && !(_x isKindOf "WeaponHolderSimulated")} count _vehicles` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | vehicles_weaponholder=`{side _x isEqualTo _thisSide && (_x isKindOf "WeaponHolderSimulated")} count _vehicles` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | players_alive=`{side group _x isEqualTo _thisSide && alive _x} count (call BIS_fnc_listPlayers)` |
+| server_performance | entities_global | ... + side=`WEST`,`EAST`, etc | players_dead=`{side group _x isEqualTo _thisSide && !alive _x} count (call BIS_fnc_listPlayers)` |
+| server_performance | player_count | ... | players_connected=`count (_allUserInfos select {_x#7 isEqualTo false})` |
+| server_performance | player_count | ... | headless_clients_connected=`count (_allUserInfos select {_x#7 isEqualTo true})` |
+| player_performance | network | ... + playerUID=`getUserInfo#2`, playerName=`getUserInfo#3` | avgPing=`getUserInfo#9#0` |
+| player_performance | network | ... + playerUID=`getUserInfo#2`, playerName=`getUserInfo#3` | avgBandwidth=`getUserInfo#9#1` |
+| player_performance | network | ... + playerUID=`getUserInfo#2`, playerName=`getUserInfo#3` | desync=`getUserInfo#9#2` |
+| mission_data | server_time | ... | diag_tickTime=`diag_tickTime` |
+| mission_data | server_time | ... | serverTime=`time` |
+| mission_data | server_time | ... | timeMultiplier=`timeMultiplier` |
+| mission_data | server_time | ... | accTime=`accTime` |
+| mission_data | weather | ... | fog=`fog` |
+| mission_data | weather | ... | overcast=`overcast` |
+| mission_data | weather | ... | rain=`rain` |
+| mission_data | weather | ... | humidity=`humidity` |
+| mission_data | weather | ... | waves=`waves` |
+| mission_data | weather | ... | windDir=`windDir` |
+| mission_data | weather | ... | windStr=`windStr` |
+| mission_data | weather | ... | gusts=`gusts` |
+| mission_data | weather | ... | lightnings=`lightnings` |
+| mission_data | weather | ... | moonIntensity=`moonIntensity` |
+| mission_data | weather | ... | moonPhase=`moonPhase` |
+| mission_data | weather | ... | sunOrMoon=`sunOrMoon` |
+
 ## BUILDING
 
 Set an environment variable in your terminal with the desired extension build version. It defaults to "DEVELOPMENT".
@@ -127,13 +179,13 @@ Run this from the project root.
 docker pull x1unix/go-mingw:1.20
 
 # Compile x64 Windows DLL
-docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20  go build -o ./ifxmetrics_x64.dll -buildmode=c-shared -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/cmd
+docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20  go build -o ./ifxmetrics_x64.dll -buildmode=c-shared -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/IFXMetrics/cmd
 
 # Compile x86 Windows DLL
-docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=386 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics.dll -buildmode=c-shared -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/cmd
+docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=386 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics.dll -buildmode=c-shared -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/IFXMetrics/cmd
 
 # Compile x64 Windows EXE
-docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics_x64.exe -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/cmd
+docker run --rm -it -v ${PWD}:/go/work -w /go/work -e GOARCH=amd64 -e CGO_ENABLED=1 x1unix/go-mingw:1.20 go build -o ./ifxmetrics_x64.exe -ldflags "-w -s -X main.EXTENSION_VERSION=`"$IFXMETRICS_BUILD_VER`"" ./extension/IFXMetrics/cmd
 ```
 
 ### EXTENSION: COMPILING FOR LINUX
@@ -144,10 +196,10 @@ Run this from the project root.
 docker build -t indifox926/build-a3go:linux-so -f ./build/Dockerfile.build .
 
 # Compile x64 Linux .so
-docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=amd64 -e CGO_ENABLED=1 indifox926/build-a3go:linux-so go build -o ./ifxmetrics_x64.so -linkshared -ldflags "-w -s -X main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=amd64 -e CGO_ENABLED=1 indifox926/build-a3go:linux-so go build -o ./ifxmetrics_x64.so -linkshared -ldflags "-w -s -X main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/IFXMetrics/cmd
 
 # Compile x86 Linux .so
-docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=386 -e CGO_ENABLED=1 indifox926/build-a3go:linux-so go build -o ./ifxmetrics.so -linkshared -ldflags "-w -s -X main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/cmd
+docker run --rm -it -v ${PWD}:/app -e GOOS=linux -e GOARCH=386 -e CGO_ENABLED=1 indifox926/build-a3go:linux-so go build -o ./ifxmetrics.so -linkshared -ldflags "-w -s -X main.EXTENSION_VERSION=${IFXMETRICS_BUILD_VER}" ./extension/IFXMetrics/cmd
 ```
 
 ### ADDON: COMPILE USING HEMTT

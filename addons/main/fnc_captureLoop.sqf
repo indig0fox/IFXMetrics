@@ -24,19 +24,22 @@ GVARMAIN(captureLoop) = [
             ]
         ];
     
+
+        // getUserInfo for all users
+        private _allUserInfos = allUsers apply {getUserInfo _x} select {count _x > 0};
         // entity_count returns an array of hashMap
         {
             GVARMAIN(extensionName) callExtension [
                 ":INFLUX:WRITE:",
                 [_x]
             ];
-        } forEach (call EFUNC(capture,entity_count));
+        } forEach ([_allUserInfos] call EFUNC(capture,entity_count));
         {
             GVARMAIN(extensionName) callExtension [
                 ":INFLUX:WRITE:",
                 [_x]
             ];
-        } forEach (call EFUNC(capture,player_performance));
+        } forEach ([_allUserInfos] call EFUNC(capture,player_performance));
 
         ["DEBUG", format[
             "Processed primary data loop in %1 ms",
