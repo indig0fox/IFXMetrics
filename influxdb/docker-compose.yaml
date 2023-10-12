@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    restart: always
+    ports:
+      - 8086:8086
+    volumes:
+      - ./data:/var/lib/influxdb2
+      - ./config:/etc/influxdb2
+    environment:
+     - DOCKER_INFLUXDB_INIT_MODE=setup
+     - DOCKER_INFLUXDB_INIT_USERNAME=exampleuser
+     - DOCKER_INFLUXDB_INIT_PASSWORD=dfaow3ho9i7funa0w3nv 
+     - DOCKER_INFLUXDB_INIT_ORG=ifx-metrics
+     - DOCKER_INFLUXDB_INIT_BUCKET=test-bucket
+     - DOCKER_INFLUXDB_INIT_RETENTION=1w
+     - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=f0982q3ahfu8yawbo27w8fb986ba90b0wb2f

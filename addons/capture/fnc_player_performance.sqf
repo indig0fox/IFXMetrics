@@ -1,6 +1,8 @@
 #include "script_component.hpp"
 
-params ["_allUserInfos", [], [[]]];
+params [
+	["_allUserInfos", [], [[]]]
+];
 
 private _hashesOut = [];
 {

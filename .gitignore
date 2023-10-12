@@ -8,5 +8,6 @@
 ifxmetrics.config.json
 
 .hemttout
-influxdb
+influxdb/data
+influxdb/config
 releases

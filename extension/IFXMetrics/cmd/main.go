@@ -319,4 +319,7 @@ func main() {
 	// s := settings.Active.Get("cbaEventHandlers")
 	// // return the custom cba event handlers as an arma hashmap
 	// fmt.Println(a3interface.ToArmaHashMap(s))
+
+	fmt.Println("IFXMetrics extension started. Version: " + EXTENSION_VERSION)
+	fmt.Scanln()
 }

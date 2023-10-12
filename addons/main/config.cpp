@@ -5,7 +5,11 @@ class CfgPatches {
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 2.10;
-		requiredAddons[] = {};
+		requiredAddons[] = {
+			"cba_main",
+			"cba_xeh",
+			"cba_settings"
+		};
 		author[] = {"IndigoFox"};
 		authorUrl = "https://github.com/indig0fox/IFXMetrics";
 	};
