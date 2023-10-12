@@ -10,7 +10,7 @@ git_hash=6                                # Default: 8
 [files]
 include=[
   "ifxmetrics.config.example.json",
-  "ifxmetrics.config.json",         # used for copying during debugging
+  # "ifxmetrics.config.json",         # used for copying during debugging
   "LICENSE",
   "README.md",
   "mod.cpp",
