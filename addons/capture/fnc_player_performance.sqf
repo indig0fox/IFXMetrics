@@ -1,5 +1,9 @@
 #include "script_component.hpp"
 
+params [
+	["_allUserInfos", [], [[]]]
+];
+
 private _hashesOut = [];
 {
 	_x params ["_playerID", "_ownerId", "_playerUID", "_profileName", "_displayName", "_steamName", "_clientState", "_isHC", "_adminState", "_networkInfo", "_unit"];
@@ -23,6 +27,6 @@ private _hashesOut = [];
 			["desync", _desync]
 		]]
 	]);
-} forEach (allUsers apply {getUserInfo _x});
+} forEach _allUserInfos;
 
 _hashesOut;
